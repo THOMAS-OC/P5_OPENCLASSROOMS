@@ -41,6 +41,9 @@ fetch(`http://localhost:3000/api/products/${id}`)
 
 });
 
+console.log(window.localStorage);
+// window.localStorage.clear()
+
 button.addEventListener("click", () =>{
 
     if (elementChoiceColors.value == "" && quantity.value == 0) {
@@ -58,10 +61,24 @@ button.addEventListener("click", () =>{
     else {
         let idUnique = id + " " + elementChoiceColors.value;
         let quantityCommand = quantity.value;
+        quantityCommand = parseInt(quantityCommand)
         console.log(quantityCommand);
-        console.log(idUnique); 
+        console.log(idUnique);
+    
+        if (window.localStorage.getItem(idUnique)){
+            alert("Quantité d'article modifée !")
+            let quantityPanier = window.localStorage.getItem(idUnique);
+            quantityPanier = parseInt(quantityPanier)
+            let newQuantityPanier = quantityPanier + quantityCommand;
+            window.localStorage.removeItem(idUnique);
+            window.localStorage.setItem(idUnique, newQuantityPanier);
+        }
+
+        else {
+            alert("Article ajouté au panier !")
+            window.localStorage.setItem(idUnique, quantityCommand) // enregistrement d'une data pour la session
+        }
+
     }
  
-    
-
 })
