@@ -27,3 +27,16 @@ pour chaque identifiant on travaille dans l'élément html article suivant,
 on insère le nom du produit, l'image de l'article, la couleur, le prix et la quantité
 */
 
+let i = 0
+
+for (let articlePanier of Object.values(window.localStorage)){
+
+    console.log(articlePanier);
+
+    const articleHTML = document.getElementsByTagName("article")
+
+    articleHTML[i].querySelector("input").value = articlePanier;
+
+    i ++
+
+}
