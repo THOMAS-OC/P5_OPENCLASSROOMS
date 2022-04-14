@@ -10,7 +10,7 @@ fetch("http://localhost:3000/api/products")
   
             const sectionArticles = document.querySelector(".items"); // Selection du parent
             let newProduct = document.createElement("a"); // Création d'un élément HTML
-            newProduct.href = "www.google.fr" // Ajout de l'attribut href
+            newProduct.href = `./product.html?id=${data[j]._id}` // Ajout de l'attribut href
             sectionArticles.appendChild(newProduct); // Ajout de l'élément crée dans le parent
             
             let article = document.createElement("article");
