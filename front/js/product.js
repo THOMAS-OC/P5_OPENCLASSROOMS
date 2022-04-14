@@ -5,8 +5,10 @@ const elementPicture = document.querySelector(".item__img")
 const elementTitle = document.getElementById("title")
 const elementDescription = document.getElementById("description")
 const elementPrice = document.getElementById("price")
-const elementChoiceColors = document.getElementById("colors")
+let elementChoiceColors = document.getElementById("colors")
+let quantity = document.getElementById("quantity")
 
+const button = document.getElementById("addToCart")
 
 fetch(`http://localhost:3000/api/products/${id}`)
     .then(res => res.json())
@@ -39,3 +41,27 @@ fetch(`http://localhost:3000/api/products/${id}`)
 
 });
 
+button.addEventListener("click", () =>{
+
+    if (elementChoiceColors.value == "" && quantity.value == 0) {
+        alert("Veuillez sélectionner une couleur et indiquez un nombre d'article supérieur à 0")
+    }
+
+    else if (quantity.value == 0){
+        alert("quantité insuffisante");
+    }
+
+    else if (elementChoiceColors.value == "") {
+        alert("Veuillez sélectionner une couleur")
+    }
+
+    else {
+        let idUnique = id + " " + elementChoiceColors.value;
+        let quantityCommand = quantity.value;
+        console.log(quantityCommand);
+        console.log(idUnique); 
+    }
+ 
+    
+
+})
