@@ -1,3 +1,12 @@
+// Fonction de rafraichissement du nombre d'articles
+function refreshNbArticles() {
+    let nbArticles = window.localStorage.length;
+    let pluriel = nbArticles > 1 ? "s":"";
+    document.querySelector("#totalQuantity").innerText = `${nbArticles} article${pluriel}`;
+}
+
+// Fonction de rafraichissement du prix total
+
 // Consitution d'un tableau du panier
 console.log(localStorage);
 let myCart = [];
@@ -21,6 +30,7 @@ while (createIndex < nbArticles){
     let cloneArticle = document.querySelector(".cart__item").cloneNode(true)
     sectionArticle.appendChild(cloneArticle)
 }
+refreshNbArticles()
 
 // On requête l'API pour obtenir les infos
 let i = 0 // variable de l'élément html "article" en cours !
@@ -49,6 +59,7 @@ buttonsDelete.forEach((btndelete) => {
         idDelete = parentButton.getAttribute("data-id") + " " + parentButton.getAttribute("data-color")
         window.localStorage.removeItem(idDelete)
         btndelete.parentElement.parentElement.parentElement.parentElement.remove();
+        refreshNbArticles()
     })
 })
 
@@ -64,3 +75,5 @@ quantityItems.forEach((quantityItem) => {
         console.log(localStorage);
     })
 })
+
+// Afficher le prix total
