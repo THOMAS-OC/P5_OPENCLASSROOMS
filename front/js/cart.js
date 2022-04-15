@@ -33,7 +33,8 @@ for (let info of myCart){
         articleHTML[i].setAttribute("data-color", info[1])
         articleHTML[i].querySelector(".cart__item__content__description").innerHTML = `<h2> ${data.name} <h2> <p> ${info[1]} </p> <p> ${data.price}€ </p>`
         articleHTML[i].querySelector("img").src = data.imageUrl
-        articleHTML[i].querySelector("input").value = info[2]; // quantité de produit
+        articleHTML[i].querySelector(".itemQuantity").value = info[2]; // quantité de produit
+        articleHTML[i].querySelector(".itemQuantity").setAttribute("value", info[2]) // quantité de produit dans l'attribut
         articleHTML[i].style.display = "flex";
         i ++
     });
@@ -51,3 +52,12 @@ buttonsDelete.forEach((btndelete) => {
 })
 
 // Gérer la modification de quantité d'un article
+const quantityItems = document.querySelectorAll(".itemQuantity");
+quantityItems.forEach((quantityItem) => {
+    quantityItem.addEventListener("change", () => {
+        parentQuantity = quantityItem.parentElement.parentElement.parentElement.parentElement;
+        idChange = parentQuantity.getAttribute("data-id") + " " + parentQuantity.getAttribute("data-color")
+        console.log(idChange);
+        quantityItem.setAttribute("value", quantityItem.value)
+    })
+})
