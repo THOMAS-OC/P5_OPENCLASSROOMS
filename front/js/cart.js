@@ -12,6 +12,7 @@ function refreshNbArticles() {
 function refreshPrixTotal() {
     let priceTotal = 0;
 
+    // On parcours l'ensemble des produits et on multiplie le prix du produit avec sa quantité puis on additionne cette valeur au prix total 
     for (let priceArticle of articleHTML){
 
         console.log(priceArticle.querySelector(".articlePrice").innerText);
@@ -58,12 +59,13 @@ for (let info of myCart){
     .then(data => {
         articleHTML[i].setAttribute("data-id", info[0])
         articleHTML[i].setAttribute("data-color", info[1])
-        articleHTML[i].querySelector(".cart__item__content__description").innerHTML = `<h2> ${data.name} <h2> <p> ${info[1]} </p> <p class="articlePrice"> ${data.price} </p>`
+        articleHTML[i].querySelector(".cart__item__content__description").innerHTML = `<h2> ${data.name} <h2> <p> ${info[1]} </p> <p> <span class="articlePrice"> ${data.price} </span> € </p>`
         articleHTML[i].querySelector("img").src = data.imageUrl
         articleHTML[i].querySelector(".itemQuantity").value = info[2]; // quantité de produit
         articleHTML[i].querySelector(".itemQuantity").setAttribute("value", info[2]) // quantité de produit dans l'attribut
         articleHTML[i].style.display = "flex";
         i ++
+        refreshPrixTotal()
     });
 }
 
