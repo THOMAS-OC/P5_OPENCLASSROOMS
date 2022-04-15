@@ -1,5 +1,3 @@
-
-
 // Consitution d'un tableau du panier
 let myCart = [];
 
@@ -26,16 +24,17 @@ while (createIndex < nbArticles){
 // On requête l'API pour obtenir les infos
 let i = 0 // variable de l'élément html "article" en cours !
 for (let info of myCart){
-    console.log(info[0]);
 
     fetch(`http://localhost:3000/api/products/${info[0]}`)
     .then(res => res.json())
     .then(data => {
-        console.log(data);
         let articleHTML = document.getElementsByTagName("article")
+        articleHTML[i].setAttribute("data-id", info[0])
+        articleHTML[i].setAttribute("data-color", info[1])
         articleHTML[i].querySelector(".cart__item__content__description").innerHTML = `<h2> ${data.name} <h2> <p> ${info[1]} </p> <p> ${data.price}€ </p>`
         articleHTML[i].querySelector("img").src = data.imageUrl
         articleHTML[i].querySelector("input").value = info[2]; // quantité de produit
+        articleHTML[i].style.display = "flex";
         i ++
     });
 }
@@ -44,28 +43,11 @@ for (let info of myCart){
 const buttonsDelete = document.querySelectorAll(".deleteItem");
 buttonsDelete.forEach((btndelete) => {
     btndelete.addEventListener("click", ()=>{
+        parentButton = btndelete.parentElement.parentElement.parentElement.parentElement
+        idDelete = parentButton.getAttribute("data-id") + " " + parentButton.getAttribute("data-color")
+        window.localStorage.removeItem(idDelete)
         btndelete.parentElement.parentElement.parentElement.parentElement.remove();
     })
 })
 
-
-
-// /* 
-// On parcours les identifiants des articles enregistrés
-// pour chaque identifiant on travaille dans l'élément html article suivant,
-// on insère le nom du produit, l'image de l'article, la couleur, le prix et la quantité
-// */
-
-// let i = 0
-
-// for (let articlePanier of Object.values(window.localStorage)){
-
-//     console.log(articlePanier);
-
-//     const articleHTML = document.getElementsByTagName("article")
-
-//     articleHTML[i].querySelector("input").value = articlePanier;
-
-//     i ++
-
-// }
+// Gérer la modification de quantité d'un article
