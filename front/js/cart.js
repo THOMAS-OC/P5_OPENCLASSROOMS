@@ -1,4 +1,5 @@
 // Consitution d'un tableau du panier
+console.log(localStorage);
 let myCart = [];
 
 for (let details of Object.keys(window.localStorage)){
@@ -58,6 +59,8 @@ quantityItems.forEach((quantityItem) => {
         parentQuantity = quantityItem.parentElement.parentElement.parentElement.parentElement;
         idChange = parentQuantity.getAttribute("data-id") + " " + parentQuantity.getAttribute("data-color")
         console.log(idChange);
-        quantityItem.setAttribute("value", quantityItem.value)
+        quantityItem.setAttribute("value", quantityItem.value) // modification dans le DOM
+        window.localStorage.setItem(idChange, quantityItem.value)
+        console.log(localStorage);
     })
 })
