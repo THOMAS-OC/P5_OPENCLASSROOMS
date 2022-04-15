@@ -1,3 +1,6 @@
+let articleHTML = document.getElementsByTagName("article")
+console.log(document.querySelector(".articlePrice").innerText);
+
 // Fonction de rafraichissement du nombre d'articles
 function refreshNbArticles() {
     let nbArticles = window.localStorage.length;
@@ -6,6 +9,20 @@ function refreshNbArticles() {
 }
 
 // Fonction de rafraichissement du prix total
+function refreshPrixTotal() {
+    let priceTotal = 0;
+
+    for (let priceArticle of articleHTML){
+
+        console.log(priceArticle.querySelector(".articlePrice").innerText);
+        console.log(priceArticle.querySelector(".itemQuantity").value);
+
+        priceTotal = priceTotal + priceArticle.querySelector(".articlePrice").innerText * priceArticle.querySelector(".itemQuantity").value
+    }
+
+    console.log(priceTotal);
+    document.querySelector("#totalPrice").innerText = priceTotal;
+}
 
 // Consitution d'un tableau du panier
 console.log(localStorage);
@@ -39,10 +56,9 @@ for (let info of myCart){
     fetch(`http://localhost:3000/api/products/${info[0]}`)
     .then(res => res.json())
     .then(data => {
-        let articleHTML = document.getElementsByTagName("article")
         articleHTML[i].setAttribute("data-id", info[0])
         articleHTML[i].setAttribute("data-color", info[1])
-        articleHTML[i].querySelector(".cart__item__content__description").innerHTML = `<h2> ${data.name} <h2> <p> ${info[1]} </p> <p> ${data.price}€ </p>`
+        articleHTML[i].querySelector(".cart__item__content__description").innerHTML = `<h2> ${data.name} <h2> <p> ${info[1]} </p> <p class="articlePrice"> ${data.price} </p>`
         articleHTML[i].querySelector("img").src = data.imageUrl
         articleHTML[i].querySelector(".itemQuantity").value = info[2]; // quantité de produit
         articleHTML[i].querySelector(".itemQuantity").setAttribute("value", info[2]) // quantité de produit dans l'attribut
@@ -60,6 +76,7 @@ buttonsDelete.forEach((btndelete) => {
         window.localStorage.removeItem(idDelete)
         btndelete.parentElement.parentElement.parentElement.parentElement.remove();
         refreshNbArticles()
+        refreshPrixTotal()
     })
 })
 
@@ -73,6 +90,7 @@ quantityItems.forEach((quantityItem) => {
         quantityItem.setAttribute("value", quantityItem.value) // modification dans le DOM
         window.localStorage.setItem(idChange, quantityItem.value)
         console.log(localStorage);
+        refreshPrixTotal()
     })
 })
 
