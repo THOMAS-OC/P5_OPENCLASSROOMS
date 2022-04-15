@@ -32,17 +32,21 @@ for (let info of myCart){
     .then(res => res.json())
     .then(data => {
         console.log(data);
-        const articleHTML = document.getElementsByTagName("article")
+        let articleHTML = document.getElementsByTagName("article")
         articleHTML[i].querySelector(".cart__item__content__description").innerHTML = `<h2> ${data.name} <h2> <p> ${info[1]} </p> <p> ${data.price}€ </p>`
         articleHTML[i].querySelector("img").src = data.imageUrl
-        // data.price; // prix de l'article
-        // console.log(info[1]); // Couleur du produit
         articleHTML[i].querySelector("input").value = info[2]; // quantité de produit
         i ++
     });
 }
 
-
+// Gérer la suppression d'un élément
+const buttonsDelete = document.querySelectorAll(".deleteItem");
+buttonsDelete.forEach((btndelete) => {
+    btndelete.addEventListener("click", ()=>{
+        btndelete.parentElement.parentElement.parentElement.parentElement.remove();
+    })
+})
 
 
 
