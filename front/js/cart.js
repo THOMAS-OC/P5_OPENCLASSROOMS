@@ -33,12 +33,10 @@ for (let info of myCart){
     .then(data => {
         console.log(data);
         const articleHTML = document.getElementsByTagName("article")
+        articleHTML[i].querySelector(".cart__item__content__description").innerHTML = `<h2> ${data.name} <h2> <p> ${info[1]} </p> <p> ${data.price}€ </p>`
+        articleHTML[i].querySelector("img").src = data.imageUrl
         // data.price; // prix de l'article
-        articleHTML[i].querySelector("h2").innerText = data.name
-        // data.imageUrl // url de l'image
-
         // console.log(info[1]); // Couleur du produit
-        // console.log(info[2]); // quantité de produit
         articleHTML[i].querySelector("input").value = info[2]; // quantité de produit
         i ++
     });
