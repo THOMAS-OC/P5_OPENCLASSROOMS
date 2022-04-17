@@ -1,50 +1,40 @@
-let articleHTML = document.getElementsByTagName("article")
-console.log(document.querySelector(".articlePrice").innerText);
+const sectionArticle = document.querySelector("#cart__items");
+const quantityItems = document.querySelectorAll(".itemQuantity");
+const buttonsDelete = document.querySelectorAll(".deleteItem");
+const articleHTML = document.getElementsByTagName("article")
+let myCart = [];
 
 // Fonction de rafraichissement du nombre d'articles
 function refreshNbArticles() {
-    let nbArticles = window.localStorage.length;
-    let pluriel = nbArticles > 1 ? "s":"";
-    document.querySelector("#totalQuantity").innerText = `${nbArticles} article${pluriel}`;
+    let nbArticle = localStorage.length;
+    let ifPlural = nbArticle > 1 ? "s":"";
+    document.querySelector("#totalQuantity").innerText = `${nbArticle} article${ifPlural}`;
 }
 
-// Fonction de rafraichissement du prix total
+// article count refresh function
 function refreshPrixTotal() {
     let priceTotal = 0;
-
-    // On parcours l'ensemble des produits et on multiplie le prix du produit avec sa quantité puis on additionne cette valeur au prix total 
     for (let priceArticle of articleHTML){
-
-        console.log(priceArticle.querySelector(".articlePrice").innerText);
-        console.log(priceArticle.querySelector(".itemQuantity").value);
-
         priceTotal = priceTotal + priceArticle.querySelector(".articlePrice").innerText * priceArticle.querySelector(".itemQuantity").value
     }
-
-    console.log(priceTotal);
     document.querySelector("#totalPrice").innerText = priceTotal;
 }
 
 // Consitution d'un tableau du panier
-console.log(localStorage);
-let myCart = [];
 
-for (let details of Object.keys(window.localStorage)){
+for (let details of Object.keys(localStorage)){
     productArray = [];
     productArray.push(details.split(" ")[0]);
     productArray.push(details.split(" ")[1]);
-    productArray.push(window.localStorage.getItem(details));
+    productArray.push(localStorage.getItem(details));
     myCart.push(productArray);
 }
 
-// On génère autant d'article html que le panier en contient
-
 // Création d'un nombre d'articles html égal au nombre d'élément dans le storage
-nbArticles = window.localStorage.length
+nbArticles = localStorage.length
 createIndex = 1
-const sectionArticle = document.querySelector("#cart__items");
 while (createIndex < nbArticles){
-    createIndex = createIndex + 1
+    createIndex ++
     let cloneArticle = document.querySelector(".cart__item").cloneNode(true)
     sectionArticle.appendChild(cloneArticle)
 }
@@ -70,12 +60,11 @@ for (let info of myCart){
 }
 
 // Gérer la suppression d'un élément
-const buttonsDelete = document.querySelectorAll(".deleteItem");
 buttonsDelete.forEach((btndelete) => {
     btndelete.addEventListener("click", ()=>{
         parentButton = btndelete.parentElement.parentElement.parentElement.parentElement
-        idDelete = parentButton.getAttribute("data-id") + " " + parentButton.getAttribute("data-color")
-        window.localStorage.removeItem(idDelete)
+        idDelete = `${parentButton.getAttribute("data-id")} ${parentButton.getAttribute("data-color")}`
+        localStorage.removeItem(idDelete)
         btndelete.parentElement.parentElement.parentElement.parentElement.remove();
         refreshNbArticles()
         refreshPrixTotal()
@@ -83,17 +72,12 @@ buttonsDelete.forEach((btndelete) => {
 })
 
 // Gérer la modification de quantité d'un article
-const quantityItems = document.querySelectorAll(".itemQuantity");
 quantityItems.forEach((quantityItem) => {
     quantityItem.addEventListener("change", () => {
         parentQuantity = quantityItem.parentElement.parentElement.parentElement.parentElement;
-        idChange = parentQuantity.getAttribute("data-id") + " " + parentQuantity.getAttribute("data-color")
-        console.log(idChange);
-        quantityItem.setAttribute("value", quantityItem.value) // modification dans le DOM
-        window.localStorage.setItem(idChange, quantityItem.value)
-        console.log(localStorage);
+        idChange = `${parentQuantity.getAttribute("data-id")} ${parentQuantity.getAttribute("data-color")}`
+        quantityItem.setAttribute("value", quantityItem.value)
+        localStorage.setItem(idChange, quantityItem.value)
         refreshPrixTotal()
     })
 })
-
-// Afficher le prix total

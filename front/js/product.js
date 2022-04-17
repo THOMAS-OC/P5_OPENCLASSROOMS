@@ -1,13 +1,12 @@
-let url = new URL(window.location.href); // Récupérer l'url
-let id = url.searchParams.get("id"); // Récupérer la valeur de l'attribut id
+const url = new URL(location.href); // Récupérer l'url
+const id = url.searchParams.get("id"); // Récupérer la valeur de l'attribut id
 
 const elementPicture = document.querySelector(".item__img")
 const elementTitle = document.getElementById("title")
 const elementDescription = document.getElementById("description")
 const elementPrice = document.getElementById("price")
-let elementChoiceColors = document.getElementById("colors")
-let quantity = document.getElementById("quantity")
-
+const elementChoiceColors = document.getElementById("colors")
+const quantity = document.getElementById("quantity")
 const button = document.getElementById("addToCart")
 
 fetch(`http://localhost:3000/api/products/${id}`)
@@ -28,7 +27,6 @@ fetch(`http://localhost:3000/api/products/${id}`)
         document.title = data.name
 
         // Add color choice
-        let nbColors = data.colors.length; // nombres de couleurs
         for (let color of data.colors){
             let newColor = document.createElement("option");
             newColor.value = color;
@@ -36,18 +34,13 @@ fetch(`http://localhost:3000/api/products/${id}`)
             elementChoiceColors.appendChild(newColor)
           }
 
-        // <option value="vert">vert</option>  
-        // let img = document.createElement("img"); // Création d'un élément HTML img
-
 });
 
-console.log(window.localStorage);
-// window.localStorage.clear()
 
 button.addEventListener("click", () =>{
 
     if (elementChoiceColors.value == "" && quantity.value == 0) {
-        alert("Veuillez sélectionner une couleur et indiquez un nombre d'article supérieur à 0")
+        alert("Veuillez sélectionner une couleur et indiquer un nombre d'articles supérieur à 0")
     }
 
     else if (quantity.value == 0){
@@ -59,24 +52,24 @@ button.addEventListener("click", () =>{
     }
 
     else {
-        let idUnique = id + " " + elementChoiceColors.value;
+        let idUnique = `${id} ${elementChoiceColors.value}`
         let quantityCommand = quantity.value;
         quantityCommand = parseInt(quantityCommand)
         console.log(quantityCommand);
         console.log(idUnique);
     
-        if (window.localStorage.getItem(idUnique)){
+        if (localStorage.getItem(idUnique)){
             alert("Quantité d'article modifée !")
-            let quantityPanier = window.localStorage.getItem(idUnique);
+            let quantityPanier = localStorage.getItem(idUnique);
             quantityPanier = parseInt(quantityPanier)
             let newQuantityPanier = quantityPanier + quantityCommand;
-            window.localStorage.removeItem(idUnique);
-            window.localStorage.setItem(idUnique, newQuantityPanier);
+            localStorage.removeItem(idUnique);
+            localStorage.setItem(idUnique, newQuantityPanier);
         }
 
         else {
             alert("Article ajouté au panier !")
-            window.localStorage.setItem(idUnique, quantityCommand) // enregistrement d'une data pour la session
+            localStorage.setItem(idUnique, quantityCommand) // enregistrement d'une data pour la session
         }
 
     }
