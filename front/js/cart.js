@@ -86,25 +86,78 @@ quantityItems.forEach((quantityItem) => {
 })
 
 //Récupérer les info de l'utilisateur
-let objectContact = {
-    prenom : "",
-    nom : "",
-    adresse : "",
-    ville : "",
+
+let contact = {
+    firstName : "",
+    lastName : "",
+    address : "",
+    city : "",
     email : "",
 }
-let namesInput = ["firstName", "lastName", "address", "city", "email"]
-let count = 0
-let arrayProducts = []
+
+let contactExample = {
+    firstName : "Thomas",
+    lastName : "ESTIVAL",
+    address : "1496",
+    city : "St maximin",
+    email : "estival.t@hotmail.com",
+}
+
+let Products = ["choco", "Vanille"]
+
+console.log(JSON.stringify({
+    contact: {
+        firstName : "Thomas",
+        lastName : "ESTIVAL",
+        address : "1496",
+        city : "St maximin",
+        email : "estival.t@hotmail.com",
+    },
+    products: ["choco", "Vanille"]
+}));
 
 buttonSubmit.addEventListener("click", ()=>{
 
-    for (let keys of Object.keys(objectContact)){
-        objectContact[keys] = document.getElementById(namesInput[count]).value
-        console.log(namesInput[count])
-        count ++;
+    // pour chaque clefs de l'objet contact, on associe la valeur du champs correspondant dans le HTML
+    for (let keys of Object.keys(contact)){
+        contact[keys] = document.getElementById(keys).value // propriétés de l'objets et ID Html correspondant nommés identiquement
     }
-    
-    console.log(objectContact);
+    console.log(contact);
+    contact = JSON.stringify(contactExample)
+    console.log(contact);
+    let urlOrder = "http://localhost:3000/api/products/order"
+      
+    fetch('http://localhost:3000/api/products/order', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+
+        body: JSON.stringify({
+            contact: {
+                firstName : "Thomas",
+                lastName : "ESTIVAL",
+                address : "1496",
+                city : "St maximin",
+                email : "estival.t@hotmail.com",
+            },
+            products: ["choco", "Vanille"]
+        })
+
+      })
+      .then(res => res.json())
+      .then(data => {
+        console.log(data);
+      })
+
+
+    // Envoie des data au backend
+    // fetch(urlOrder,{
+    //     method : "POST",
+    //     body : contact,
+    //     headers : {
+    //         "Content-Type" : "application/json"
+    //     },
+    // } )
 
 })
