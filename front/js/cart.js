@@ -1,7 +1,6 @@
 const sectionArticle = document.querySelector("#cart__items");
-const quantityItems = document.querySelectorAll(".itemQuantity");
-const buttonsDelete = document.querySelectorAll(".deleteItem");
 const articleHTML = document.getElementsByTagName("article")
+const buttonSubmit = document.getElementById("order")
 let myCart = [];
 
 // Fonction de rafraichissement du nombre d'articles
@@ -11,7 +10,7 @@ function refreshNbArticles() {
     document.querySelector("#totalQuantity").innerText = `${nbArticle} article${ifPlural}`;
 }
 
-// article count refresh function
+// Price total refresh function
 function refreshPrixTotal() {
     let priceTotal = 0;
     for (let priceArticle of articleHTML){
@@ -43,7 +42,7 @@ refreshNbArticles()
 // On requête l'API pour obtenir les infos
 let i = 0 // variable de l'élément html "article" en cours !
 for (let info of myCart){
-
+    
     fetch(`http://localhost:3000/api/products/${info[0]}`)
     .then(res => res.json())
     .then(data => {
@@ -59,6 +58,8 @@ for (let info of myCart){
     });
 }
 
+const buttonsDelete = document.querySelectorAll(".deleteItem");
+
 // Gérer la suppression d'un élément
 buttonsDelete.forEach((btndelete) => {
     btndelete.addEventListener("click", ()=>{
@@ -71,6 +72,8 @@ buttonsDelete.forEach((btndelete) => {
     })
 })
 
+const quantityItems = document.querySelectorAll(".itemQuantity");
+
 // Gérer la modification de quantité d'un article
 quantityItems.forEach((quantityItem) => {
     quantityItem.addEventListener("change", () => {
@@ -80,4 +83,28 @@ quantityItems.forEach((quantityItem) => {
         localStorage.setItem(idChange, quantityItem.value)
         refreshPrixTotal()
     })
+})
+
+//Récupérer les info de l'utilisateur
+let objectContact = {
+    prenom : "",
+    nom : "",
+    adresse : "",
+    ville : "",
+    email : "",
+}
+let namesInput = ["firstName", "lastName", "address", "city", "email"]
+let count = 0
+let arrayProducts = []
+
+buttonSubmit.addEventListener("click", ()=>{
+
+    for (let keys of Object.keys(objectContact)){
+        objectContact[keys] = document.getElementById(namesInput[count]).value
+        console.log(namesInput[count])
+        count ++;
+    }
+    
+    console.log(objectContact);
+
 })
