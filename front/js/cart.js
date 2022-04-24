@@ -103,20 +103,11 @@ let contactExample = {
     email : "estival.t@hotmail.com",
 }
 
-let Products = ["choco", "Vanille"]
+let products = ["choco", "Vanille"]
 
-console.log(JSON.stringify({
-    contact: {
-        firstName : "Thomas",
-        lastName : "ESTIVAL",
-        address : "1496",
-        city : "St maximin",
-        email : "estival.t@hotmail.com",
-    },
-    products: ["choco", "Vanille"]
-}));
 
-buttonSubmit.addEventListener("click", ()=>{
+buttonSubmit.addEventListener("click", (b)=>{
+    b.preventDefault()
 
     // pour chaque clefs de l'objet contact, on associe la valeur du champs correspondant dans le HTML
     for (let keys of Object.keys(contact)){
@@ -125,39 +116,38 @@ buttonSubmit.addEventListener("click", ()=>{
     console.log(contact);
     contact = JSON.stringify(contactExample)
     console.log(contact);
-    let urlOrder = "http://localhost:3000/api/products/order"
-      
-    fetch('http://localhost:3000/api/products/order', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
 
-        body: JSON.stringify({
-            contact: {
-                firstName : "Thomas",
-                lastName : "ESTIVAL",
-                address : "1496",
-                city : "St maximin",
-                email : "estival.t@hotmail.com",
-            },
-            products: ["choco", "Vanille"]
-        })
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
 
-      })
-      .then(res => res.json())
-      .then(data => {
-        console.log(data);
-      })
+    var raw = JSON.stringify({
+    "contact": {
+        "firstName": document.getElementById("firstName"),
+        "lastName": document.getElementById("lastName"),
+        "address": document.getElementById("address"),
+        "city": document.getElementById("city"),
+        "email": document.getElementById("email"),
+    },
+    "products": [
+        "107fb5b75607497b96722bda5b504926"
+    ]
+    });
 
+    var requestOptions = {
+    method: 'POST',
+    headers: myHeaders,
+    body: raw,
+    redirect: 'follow'
+    };
 
-    // Envoie des data au backend
-    // fetch(urlOrder,{
-    //     method : "POST",
-    //     body : contact,
-    //     headers : {
-    //         "Content-Type" : "application/json"
-    //     },
-    // } )
+    fetch("http://localhost:3000/api/products/order", requestOptions)
+    .then(response => response.json())
+    .then((result) => {
+        console.log(result.orderId)
+        console.log(location.href.replace("cart.html", "confirmation.html"));
+        location.assign(location.href.replace("cart.html", `confirmation.html?id=${result.orderId}`))
+
+    })
+    .catch(error => console.log('error', error));
 
 })
