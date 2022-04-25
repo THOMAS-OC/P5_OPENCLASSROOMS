@@ -2,6 +2,7 @@ const sectionArticle = document.querySelector("#cart__items");
 const articleHTML = document.getElementsByTagName("article")
 const buttonSubmit = document.getElementById("order")
 let myCart = [];
+let listIdCart = []
 
 // Fonction de rafraichissement du nombre d'articles
 function refreshNbArticles() {
@@ -20,10 +21,10 @@ function refreshPrixTotal() {
 }
 
 // Consitution d'un tableau du panier
-
 for (let details of Object.keys(localStorage)){
     productArray = [];
     productArray.push(details.split(" ")[0]);
+    listIdCart.push(details.split(" ")[0]);
     productArray.push(details.split(" ")[1]);
     productArray.push(localStorage.getItem(details));
     myCart.push(productArray);
@@ -95,43 +96,28 @@ let contact = {
     email : "",
 }
 
-let contactExample = {
-    firstName : "Thomas",
-    lastName : "ESTIVAL",
-    address : "1496",
-    city : "St maximin",
-    email : "estival.t@hotmail.com",
-}
 
-let products = ["choco", "Vanille"]
+let products = listIdCart
 
 
 buttonSubmit.addEventListener("click", (b)=>{
     b.preventDefault()
+    console.log(listIdCart);
 
     // pour chaque clefs de l'objet contact, on associe la valeur du champs correspondant dans le HTML
     for (let keys of Object.keys(contact)){
         contact[keys] = document.getElementById(keys).value // propriétés de l'objets et ID Html correspondant nommés identiquement
     }
-    console.log(contact);
-    contact = JSON.stringify(contactExample)
-    console.log(contact);
 
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
     var raw = JSON.stringify({
-    "contact": {
-        "firstName": document.getElementById("firstName"),
-        "lastName": document.getElementById("lastName"),
-        "address": document.getElementById("address"),
-        "city": document.getElementById("city"),
-        "email": document.getElementById("email"),
-    },
-    "products": [
-        "107fb5b75607497b96722bda5b504926"
-    ]
+    contact,
+    products
     });
+
+    console.log(raw);
 
     var requestOptions = {
     method: 'POST',
@@ -143,10 +129,7 @@ buttonSubmit.addEventListener("click", (b)=>{
     fetch("http://localhost:3000/api/products/order", requestOptions)
     .then(response => response.json())
     .then((result) => {
-        console.log(result.orderId)
-        console.log(location.href.replace("cart.html", "confirmation.html"));
         location.assign(location.href.replace("cart.html", `confirmation.html?id=${result.orderId}`))
-
     })
     .catch(error => console.log('error', error));
 
