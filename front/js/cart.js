@@ -76,7 +76,6 @@ buttonsDelete.forEach((btndelete) => {
         refreshNbArticles()
         refreshPrixTotal()
         refreshArrayCart()
-        console.log(myCart);
     })
 })
 
@@ -91,7 +90,6 @@ quantityItems.forEach((quantityItem) => {
         localStorage.setItem(idChange, quantityItem.value)
         refreshPrixTotal()
         refreshArrayCart()
-        console.log(myCart);
     })
 })
 
@@ -107,36 +105,64 @@ let contact = {
 
 let products = listIdCart
 
+// VALIDATION FORM
 
-buttonSubmit.addEventListener("click", (b)=>{
-    b.preventDefault()
+
+buttonSubmit.addEventListener("click", (button)=>{
+    button.preventDefault()
+    validForm = false;
 
     // pour chaque clefs de l'objet contact, on associe la valeur du champs correspondant dans le HTML
     for (let keys of Object.keys(contact)){
-        contact[keys] = document.getElementById(keys).value // propriétés de l'objets et ID Html correspondant nommés identiquement
+        contact[keys] = document.getElementById(keys).value.trim() // propriétés de l'objets et ID Html correspondant nommés identiquement
     }
+
+    let lettersOnly = /^[A-Za-z]+$/;
+    let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+    if (contact.lastName.match(lettersOnly) && contact.firstName.match(lettersOnly) && contact.email.match(emailRegex) ){
+        validForm = true
+        console.log(validForm);
+    }
+    else if (!contact.email.match(emailRegex)) {
+        alert("Veuillez saisir une adresse email valide svp !")
+        validForm = false;
+    }
+    else {
+        alert("Veuillez saisir uniquement des lettres dans les champs nom et prénom svp !")
+        validForm = false;
+    }
+    
+    contact.lastName = contact.lastName.toUpperCase()
+    contact.firstName = contact.firstName.toLowerCase()
+    
 
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
-    var raw = JSON.stringify({
-    contact,
-    products
+    let rawData = JSON.stringify({
+        contact,
+        products
     });
 
 
-    var requestOptions = {
+    const requestOptions = {
     method: 'POST',
     headers: myHeaders,
-    body: raw,
+    body: rawData,
     redirect: 'follow'
     };
 
-    fetch("http://localhost:3000/api/products/order", requestOptions)
-    .then(response => response.json())
-    .then((result) => {
-        location.assign(location.href.replace("cart.html", `confirmation.html?id=${result.orderId}`))
-    })
-    .catch(error => console.log('error', error));
+    if (validForm){
+
+        fetch("http://localhost:3000/api/products/order", requestOptions)
+        .then(response => response.json())
+        .then((result) => {
+            location.assign(location.href.replace("cart.html", `confirmation.html?id=${result.orderId}`))
+        })
+        .catch(error => console.log('error', error));
+
+    }
+
 
 })
