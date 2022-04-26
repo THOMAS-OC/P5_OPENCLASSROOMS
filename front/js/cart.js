@@ -20,15 +20,20 @@ function refreshPrixTotal() {
     document.querySelector("#totalPrice").innerText = priceTotal;
 }
 
-// Consitution d'un tableau du panier
-for (let details of Object.keys(localStorage)){
-    productArray = [];
-    productArray.push(details.split(" ")[0]);
-    listIdCart.push(details.split(" ")[0]);
-    productArray.push(details.split(" ")[1]);
-    productArray.push(localStorage.getItem(details));
-    myCart.push(productArray);
+// Fonction de rafraichissement du tableau
+function refreshArrayCart(){
+    myCart = []
+    for (let details of Object.keys(localStorage)){
+        productArray = [];
+        productArray.push(details.split(" ")[0]);
+        listIdCart.push(details.split(" ")[0]);
+        productArray.push(details.split(" ")[1]);
+        productArray.push(localStorage.getItem(details));
+        myCart.push(productArray);
+    }
 }
+
+refreshArrayCart()
 
 // Création d'un nombre d'articles html égal au nombre d'élément dans le storage
 nbArticles = localStorage.length
@@ -70,6 +75,8 @@ buttonsDelete.forEach((btndelete) => {
         btndelete.parentElement.parentElement.parentElement.parentElement.remove();
         refreshNbArticles()
         refreshPrixTotal()
+        refreshArrayCart()
+        console.log(myCart);
     })
 })
 
@@ -83,10 +90,12 @@ quantityItems.forEach((quantityItem) => {
         quantityItem.setAttribute("value", quantityItem.value)
         localStorage.setItem(idChange, quantityItem.value)
         refreshPrixTotal()
+        refreshArrayCart()
+        console.log(myCart);
     })
 })
 
-//Récupérer les info de l'utilisateur
+// Récupérer les info de l'utilisateur
 
 let contact = {
     firstName : "",
@@ -96,13 +105,11 @@ let contact = {
     email : "",
 }
 
-
 let products = listIdCart
 
 
 buttonSubmit.addEventListener("click", (b)=>{
     b.preventDefault()
-    console.log(listIdCart);
 
     // pour chaque clefs de l'objet contact, on associe la valeur du champs correspondant dans le HTML
     for (let keys of Object.keys(contact)){
@@ -117,7 +124,6 @@ buttonSubmit.addEventListener("click", (b)=>{
     products
     });
 
-    console.log(raw);
 
     var requestOptions = {
     method: 'POST',
