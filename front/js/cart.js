@@ -23,6 +23,7 @@ function refreshPrixTotal() {
 // Fonction de rafraichissement du tableau
 function refreshArrayCart(){
     myCart = []
+    listIdCart = []
     for (let details of Object.keys(localStorage)){
         productArray = [];
         productArray.push(details.split(" ")[0]);
@@ -117,20 +118,29 @@ buttonSubmit.addEventListener("click", (button)=>{
         contact[keys] = document.getElementById(keys).value.trim() // propriétés de l'objets et ID Html correspondant nommés identiquement
     }
 
-    let lettersOnly = /^[A-Za-z]+$/;
+    let nameRegex = /^[A-Za-z]+$/;
     let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    let cityRegex = "";
 
-    if (contact.lastName.match(lettersOnly) && contact.firstName.match(lettersOnly) && contact.email.match(emailRegex) ){
-        validForm = true
-        console.log(validForm);
+    console.log(contact.lastName);
+
+    if (!contact.lastName.match(nameRegex)){
+        alert("Veuillez saisir nom svp ")
+    }
+    else if (!contact.firstName.match(nameRegex)){
+        alert("Veuillez saisir prenom svp ")
     }
     else if (!contact.email.match(emailRegex)) {
         alert("Veuillez saisir une adresse email valide svp !")
-        validForm = false;
+    }
+    else if (!contact.city){
+        alert("Veuillez renseigner une ville")
+    }
+    else if (!contact.address){
+        alert("Veuillez renseigner votre adresse")
     }
     else {
-        alert("Veuillez saisir uniquement des lettres dans les champs nom et prénom svp !")
-        validForm = false;
+        validForm = true;
     }
     
     contact.lastName = contact.lastName.toUpperCase()

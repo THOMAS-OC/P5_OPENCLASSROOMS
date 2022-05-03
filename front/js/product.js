@@ -9,47 +9,94 @@ const elementChoiceColors = document.getElementById("colors")
 const quantity = document.getElementById("quantity")
 const button = document.getElementById("addToCart")
 
-fetch(`http://localhost:3000/api/products/${id}`)
-    .then(res => res.json())
-    .then(data => {
-        // informations
-        elementTitle.innerText = data.name
-        elementPrice.innerText = data.price
-        elementDescription.innerText = data.description
+// fetch(`http://localhost:3000/api/products/${id}`)
+//     .then(res => res.json())
+//     .then(data => {
+//         console.log(data);
+//         // informations
+//         elementTitle.innerText = data.name
+//         elementPrice.innerText = data.price
+//         elementDescription.innerText = data.description
         
-        // picture
-        let img = document.createElement("img"); // Création d'un élément HTML img
-        img.src = data.imageUrl;
-        img.alt = data.altTxt;
-        elementPicture.appendChild(img); // Ajout de l'élément crée dans le parent
+//         // picture
+//         let img = document.createElement("img"); // Création d'un élément HTML img
+//         img.src = data.imageUrl;
+//         img.alt = data.altTxt;
+//         elementPicture.appendChild(img); // Ajout de l'élément crée dans le parent
 
-        //title
-        document.title = data.name
+//         //title
+//         document.title = data.name
 
-        // Add color choice
-        for (let color of data.colors){
-            let newColor = document.createElement("option");
-            newColor.value = color;
-            newColor.innerText = color
-            elementChoiceColors.appendChild(newColor)
-          }
+//         // Add color choice
+//         for (let color of data.colors){
+//             let newColor = document.createElement("option");
+//             newColor.value = color;
+//             newColor.innerText = color
+//             elementChoiceColors.appendChild(newColor)
+//           }
+// });
 
-});
+
+
+fetch(`http://localhost:3000/api/products/${id}`)
+.then( rep => 
+    {
+        if (rep.ok === true) 
+            rep.json()
+            .then(data => {
+                console.log(data);
+                // informations
+                elementTitle.innerText = data.name
+                elementPrice.innerText = data.price
+                elementDescription.innerText = data.description
+                
+                // picture
+                let img = document.createElement("img"); // Création d'un élément HTML img
+                img.src = data.imageUrl;
+                img.alt = data.altTxt;
+                elementPicture.appendChild(img); // Ajout de l'élément crée dans le parent
+
+                //title
+                document.title = data.name
+
+                // Add color choice
+                for (let color of data.colors){
+                    let newColor = document.createElement("option");
+                    newColor.value = color;
+                    newColor.innerText = color
+                    elementChoiceColors.appendChild(newColor)
+                }
+        });
+        else {
+            alert("Le produit est introuvable, nous vous redirigeons vers la page d'accueil");
+            console.log(location.href);
+            console.log(location.href.indexOf("html/"))
+            let urlRedirect = location.href.slice(0, location.href.indexOf("html/") + 4)
+            urlRedirect = urlRedirect + "/index.html"
+            console.log(urlRedirect);
+            location.assign(urlRedirect);
+
+        }
+    }
+);
+
+
 
 
 button.addEventListener("click", () =>{
 
-    if (elementChoiceColors.value == "" && quantity.value == 0) {
+    if (elementChoiceColors.value == "" && quantity.value < 1) {
         alert("Veuillez sélectionner une couleur et indiquer un nombre d'articles supérieur à 0")
     }
 
-    else if (quantity.value == 0){
-        alert("quantité insuffisante");
+    else if (quantity.value < 0){
+        alert("La quantité ne peut pas être inférieur à 1");
     }
 
     else if (elementChoiceColors.value == "") {
         alert("Veuillez sélectionner une couleur")
     }
+
 
     else {
         let idUnique = `${id} ${elementChoiceColors.value}`
