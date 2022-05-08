@@ -56,17 +56,19 @@ fetch(`http://localhost:3000/api/products/${id}`)
 
 button.addEventListener("click", () =>{
 
+   
     if (elementChoiceColors.value == "") {
         alert("Veuillez sélectionner une couleur")
+    }
+
+    else if (!parseInt(quantity.value)){
+        alert("Veuillez saisir un nombre dans le champs 'nombre d'articles' svp");
     }
 
     else if (quantity.value < 1 || quantity.value > 100){
         alert("Veuillez saisir un nombre entre 1 et 100 dans le champs 'nombre d'articles' svp");
     }
 
-    // else if (parseInt(quantity.value) == NaN){
-    //     alert("Veuillez saisir un nombre dans le champs 'nombre d'articles' svp");
-    // }
 
     else {
         let idUnique = `${id} ${elementChoiceColors.value}`
