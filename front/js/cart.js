@@ -120,7 +120,6 @@ buttonSubmit.addEventListener("click", (button)=>{
 
     let nameRegex = /^[A-Za-z]+$/;
     let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    let cityRegex = "";
 
     console.log(contact.lastName);
 
@@ -131,7 +130,7 @@ buttonSubmit.addEventListener("click", (button)=>{
         alert("Veuillez saisir prenom svp ")
     }
     else if (!contact.email.match(emailRegex)) {
-        alert("Veuillez saisir une adresse email valide svp !")
+        alert("Veuillez saisir une adresse email valide svp")
     }
     else if (!contact.city){
         alert("Veuillez renseigner une ville")

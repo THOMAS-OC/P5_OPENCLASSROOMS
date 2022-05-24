@@ -57,7 +57,7 @@ fetch(`http://localhost:3000/api/products/${id}`)
 button.addEventListener("click", () =>{
 
    
-    if (elementChoiceColors.value == "") {
+    if (!elementChoiceColors.value) {
         alert("Veuillez sélectionner une couleur")
     }
 
