@@ -31,7 +31,7 @@ fetch(`http://localhost:3000/api/products/${id}`)
                 document.title = data.name
 
                 // Add color choice
-                for (let color of data.colors){
+                for (const color of data.colors){
                     let newColor = document.createElement("option");
                     newColor.value = color;
                     newColor.innerText = color

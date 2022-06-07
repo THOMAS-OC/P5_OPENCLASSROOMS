@@ -13,7 +13,7 @@ const refreshNbArticles = () => {
 // Fonction de rafraichissement du prix total
 const refreshPrixTotal = () => {
     let priceTotal = 0;
-    for (let priceArticle of articleHTML){
+    for (const priceArticle of articleHTML){
         priceTotal = priceTotal + priceArticle.querySelector(".articlePrice").innerText * priceArticle.querySelector(".itemQuantity").value
     }
     document.querySelector("#totalPrice").innerText = priceTotal;
@@ -23,7 +23,7 @@ const refreshPrixTotal = () => {
 const refreshArrayCart = () => {
     myCart = []
     listIdCart = []
-    for (let details of Object.keys(localStorage)){
+    for (const details of Object.keys(localStorage)){
         productArray = [];
         productArray.push(details.split(" ")[0]);
         listIdCart.push(details.split(" ")[0]);
@@ -47,7 +47,7 @@ refreshNbArticles()
 
 // On requête l'API pour obtenir les infos
 let i = 0 // variable de l'élément html "article" en cours !
-for (let info of myCart){
+for (const info of myCart){
     
     fetch(`http://localhost:3000/api/products/${info[0]}`)
     .then(res => res.json())
@@ -84,6 +84,19 @@ const quantityItems = document.querySelectorAll(".itemQuantity");
 // Gérer la modification de quantité d'un article
 quantityItems.forEach((quantityItem) => {
     quantityItem.addEventListener("change", () => {
+
+        if (!quantityItem.value || quantityItem.value == 0){
+            quantityItem.value = 1
+        }
+
+        else if (quantityItem.value > 100) {
+            quantityItem.value = 100
+            alert("Attention quantité maximum de 100 !")
+        }
+        else if (quantityItem.value < 0) {
+            quantityItem.value = 0
+        }
+
         parentQuantity = quantityItem.parentElement.parentElement.parentElement.parentElement;
         idChange = `${parentQuantity.getAttribute("data-id")} ${parentQuantity.getAttribute("data-color")}`
         quantityItem.setAttribute("value", quantityItem.value)
@@ -110,10 +123,10 @@ let products = listIdCart
 
 buttonSubmit.addEventListener("click", (button)=>{
     button.preventDefault()
-    validForm = false;
+    validForm = false;  
 
     // pour chaque clefs de l'objet contact, on associe la valeur du champs correspondant dans le HTML
-    for (let keys of Object.keys(contact)){
+    for (const keys of Object.keys(contact)){
         contact[keys] = document.getElementById(keys).value.trim() // propriétés de l'objets et ID Html correspondant nommés identiquement
     }
 
