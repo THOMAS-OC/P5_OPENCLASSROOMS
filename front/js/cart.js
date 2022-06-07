@@ -3,16 +3,15 @@ const articleHTML = document.getElementsByTagName("article")
 const buttonSubmit = document.getElementById("order")
 let myCart = [];
 let listIdCart = []
-
 // Fonction de rafraichissement du nombre d'articles
-function refreshNbArticles() {
+const refreshNbArticles = () => {
     let nbArticle = localStorage.length;
     let ifPlural = nbArticle > 1 ? "s":"";
     document.querySelector("#totalQuantity").innerText = `${nbArticle} article${ifPlural}`;
 }
 
-// Price total refresh function
-function refreshPrixTotal() {
+// Fonction de rafraichissement du prix total
+const refreshPrixTotal = () => {
     let priceTotal = 0;
     for (let priceArticle of articleHTML){
         priceTotal = priceTotal + priceArticle.querySelector(".articlePrice").innerText * priceArticle.querySelector(".itemQuantity").value
@@ -21,7 +20,7 @@ function refreshPrixTotal() {
 }
 
 // Fonction de rafraichissement du tableau
-function refreshArrayCart(){
+const refreshArrayCart = () => {
     myCart = []
     listIdCart = []
     for (let details of Object.keys(localStorage)){
