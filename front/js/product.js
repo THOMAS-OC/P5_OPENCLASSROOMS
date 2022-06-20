@@ -11,13 +11,13 @@ const elementChoiceColors = document.getElementById("colors")
 const quantity = document.getElementById("quantity")
 const button = document.getElementById("addToCart")
 
+
 fetch(`${URLCONST.URL_BASE}${URLCONST.ENDPOINT_GET}${id}`)
 .then( rep => 
     {
         if (rep.ok === true) 
             rep.json()
             .then(data => {
-                console.log(data);
                 // informations
                 elementTitle.innerText = data.name
                 elementPrice.innerText = data.price
@@ -42,11 +42,8 @@ fetch(`${URLCONST.URL_BASE}${URLCONST.ENDPOINT_GET}${id}`)
         });
         else {
             alert("Le produit est introuvable, nous vous redirigeons vers la page d'accueil");
-            console.log(location.href);
-            console.log(location.href.indexOf("html/"))
             let urlRedirect = location.href.slice(0, location.href.indexOf("html/") + 4)
             urlRedirect = urlRedirect + "/index.html"
-            console.log(urlRedirect);
             location.assign(urlRedirect);
 
         }
@@ -76,8 +73,6 @@ button.addEventListener("click", () =>{
         let idUnique = `${id} ${elementChoiceColors.value}`
         let quantityCommand = quantity.value;
         quantityCommand = parseInt(quantityCommand)
-        console.log(quantityCommand);
-        console.log(idUnique);
     
         if (localStorage.getItem(idUnique)){
             alert("Quantité d'article modifée !")

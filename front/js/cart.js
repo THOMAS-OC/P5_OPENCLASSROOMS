@@ -51,7 +51,7 @@ refreshNbArticles()
 let i = 0 // variable de l'élément html "article" en cours !
 for (const info of myCart){
     
-    fetch(`http://localhost:3000/api/products/${info[0]}`)
+    fetch(`${URLCONST.URL_BASE}${URLCONST.ENDPOINT_GET}${info[0]}`)
     .then(res => res.json())
     .then(data => {
         articleHTML[i].setAttribute("data-id", info[0])
@@ -135,8 +135,6 @@ buttonSubmit.addEventListener("click", (button)=>{
     let nameRegex = /^[A-Za-z]+$/;
     let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
-    console.log(contact.lastName);
-
     if (!contact.lastName.match(nameRegex)){
         alert("Veuillez saisir nom svp ")
     }
@@ -178,7 +176,7 @@ buttonSubmit.addEventListener("click", (button)=>{
 
     if (validForm){
 
-        fetch("http://localhost:3000/api/products/order", requestOptions)
+        fetch(`${URLCONST.URL_BASE}${URLCONST.ENDPOINT_POST}`, requestOptions)
         .then(response => response.json())
         .then((result) => {
             location.assign(location.href.replace("cart.html", `confirmation.html?id=${result.orderId}`))
