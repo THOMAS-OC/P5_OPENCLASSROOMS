@@ -1,3 +1,5 @@
+import * as URLCONST from "./constantes.js"
+
 const sectionArticle = document.querySelector("#cart__items");
 const articleHTML = document.getElementsByTagName("article")
 const buttonSubmit = document.getElementById("order")
@@ -24,7 +26,7 @@ const refreshArrayCart = () => {
     myCart = []
     listIdCart = []
     for (const details of Object.keys(localStorage)){
-        productArray = [];
+        let productArray = [];
         productArray.push(details.split(" ")[0]);
         listIdCart.push(details.split(" ")[0]);
         productArray.push(details.split(" ")[1]);
@@ -36,8 +38,8 @@ const refreshArrayCart = () => {
 refreshArrayCart()
 
 // Création d'un nombre d'articles html égal au nombre d'élément dans le storage
-nbArticles = localStorage.length
-createIndex = 1
+let nbArticles = localStorage.length
+let createIndex = 1
 while (createIndex < nbArticles){
     createIndex ++
     let cloneArticle = document.querySelector(".cart__item").cloneNode(true)
@@ -69,8 +71,8 @@ const buttonsDelete = document.querySelectorAll(".deleteItem");
 // Gérer la suppression d'un élément
 buttonsDelete.forEach((btndelete) => {
     btndelete.addEventListener("click", ()=>{
-        parentButton = btndelete.parentElement.parentElement.parentElement.parentElement
-        idDelete = `${parentButton.getAttribute("data-id")} ${parentButton.getAttribute("data-color")}`
+        let parentButton = btndelete.parentElement.parentElement.parentElement.parentElement
+        let idDelete = `${parentButton.getAttribute("data-id")} ${parentButton.getAttribute("data-color")}`
         localStorage.removeItem(idDelete)
         btndelete.parentElement.parentElement.parentElement.parentElement.remove();
         refreshNbArticles()
@@ -97,8 +99,8 @@ quantityItems.forEach((quantityItem) => {
             quantityItem.value = 0
         }
 
-        parentQuantity = quantityItem.parentElement.parentElement.parentElement.parentElement;
-        idChange = `${parentQuantity.getAttribute("data-id")} ${parentQuantity.getAttribute("data-color")}`
+        let parentQuantity = quantityItem.parentElement.parentElement.parentElement.parentElement;
+        let idChange = `${parentQuantity.getAttribute("data-id")} ${parentQuantity.getAttribute("data-color")}`
         quantityItem.setAttribute("value", quantityItem.value)
         localStorage.setItem(idChange, quantityItem.value)
         refreshPrixTotal()
@@ -123,7 +125,7 @@ let products = listIdCart
 
 buttonSubmit.addEventListener("click", (button)=>{
     button.preventDefault()
-    validForm = false;  
+    let validForm = false;  
 
     // pour chaque clefs de l'objet contact, on associe la valeur du champs correspondant dans le HTML
     for (const keys of Object.keys(contact)){
@@ -168,10 +170,10 @@ buttonSubmit.addEventListener("click", (button)=>{
 
 
     const requestOptions = {
-    method: 'POST',
-    headers: myHeaders,
-    body: rawData,
-    redirect: 'follow'
+        method: 'POST',
+        headers: myHeaders,
+        body: rawData,
+        redirect: 'follow'
     };
 
     if (validForm){

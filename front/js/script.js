@@ -1,6 +1,7 @@
-const sectionArticles = document.querySelector(".items"); // Selection du parent
+import * as URLCONST from "./constantes.js"
 
-fetch("http://localhost:3000/api/products")
+const sectionArticles = document.querySelector(".items"); // Selection du parent
+fetch(`${URLCONST.URL_BASE}${URLCONST.ENDPOINT_GET}`)
     .then(res => res.json())
     .then(database => {
 

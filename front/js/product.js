@@ -1,3 +1,5 @@
+import * as URLCONST from "./constantes.js"
+
 const url = new URL(location.href); // Récupérer l'url
 const id = url.searchParams.get("id"); // Récupérer la valeur de l'attribut id
 
@@ -9,7 +11,7 @@ const elementChoiceColors = document.getElementById("colors")
 const quantity = document.getElementById("quantity")
 const button = document.getElementById("addToCart")
 
-fetch(`http://localhost:3000/api/products/${id}`)
+fetch(`${URLCONST.URL_BASE}${URLCONST.ENDPOINT_GET}${id}`)
 .then( rep => 
     {
         if (rep.ok === true) 
