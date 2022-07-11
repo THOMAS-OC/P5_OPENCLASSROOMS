@@ -53,32 +53,42 @@ const refreshArrayCart = () => {
 refreshArrayCart()
 console.log(myCart);
 
-// Création d'un nombre d'articles html égal au nombre d'élément dans le storage
-let nbArticles = localStorage.length
-let createIndex = 1
-while (createIndex < nbArticles){
-    createIndex ++
-    let cloneArticle = document.querySelector(".cart__item").cloneNode(true)
-    sectionArticle.appendChild(cloneArticle)
-}
-refreshNbArticles()
-
 // On requête l'API pour obtenir les infos
-let index = 0 // variable de l'élément html "article" en cours !
+let articleIndex = 0 // variable de l'élément html "article" en cours !
 for (const info of myCart){
     
     fetch(`${URLCONST.URL_BASE}${URLCONST.ENDPOINT_GET}${info[0]}`)
     .then(res => res.json())
     .then(data => {
-        articleHTML[index].setAttribute("data-id", info[0])
-        articleHTML[index].setAttribute("data-color", info[1])
-        articleHTML[index].querySelector(".cart__item__content__description").innerHTML = `<h2> ${data.name} <h2> <p> ${info[1]} </p> <p> <span class="articlePrice"> ${data.price} </span> € </p>`
-        articleHTML[index].querySelector("img").src = data.imageUrl
-        articleHTML[index].querySelector(".itemQuantity").value = info[2]; // quantité de produit
-        articleHTML[index].querySelector(".itemQuantity").setAttribute("value", info[2]) // quantité de produit dans l'attribut
-        articleHTML[index].style.display = "flex";
-        index ++
-        refreshPrixTotal()
+
+        let articleItem = document.createElement("article")
+        let parentItem = document.querySelector("#cart__items")
+        parentItem.appendChild(articleItem)
+
+        articleItem.outerHTML = `<article style="display: flex;" class="cart__item model__article" data-id="${info[0]}" data-color="${info[1]}">
+        <div class="cart__item__img">
+          <img src="${data.imageUrl}" alt="Photographie d'un canapé">
+        </div>
+        <div class="cart__item__content">
+          <div class="cart__item__content__description">
+            <h2> ${data.name} </h2>
+            <p> ${info[1]} </p>
+            <p> <span class="articlePrice"> ${data.price} </span> € </p>
+          </div>
+          <div class="cart__item__content__settings">
+            <div class="cart__item__content__settings__quantity">
+              <p>Qté : </p>
+              <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${info[2]}">
+            </div>
+            <div class="cart__item__content__settings__delete">
+              <p class="deleteItem">Supprimer</p>
+            </div>
+          </div>
+        </div>
+      </article>`
+      refreshPrixTotal()
+      refreshNbArticles()
+
     });
 }
 
