@@ -10,8 +10,13 @@ let listIdCart = []
 
 // Fonction d'affichage du formulaire
 const displayForm = () => {
+    // Affichage du formulaire et du titre
     orderForm.style.visibility = localStorage.length > 0 ? "visible":"hidden"
     document.querySelector("h1").innerText = localStorage.length > 0 ? "Votre panier":"Votre panier est vide"
+    // Affichage du modèle d'article
+    if(localStorage.length == 0){
+        document.querySelector("#cart__items").removeChild(document.querySelector(".cart__item"))
+    }
 }
 
 displayForm()
@@ -58,9 +63,8 @@ while (createIndex < nbArticles){
     let cloneArticle = document.querySelector(".cart__item").cloneNode(true)
     sectionArticle.appendChild(cloneArticle)
 }
-refreshNbArticles()
 
-// On requête l'API pour obtenir les infos
+// AFFICHAGE DES INFOS
 let index = 0 // variable de l'élément html "article" en cours !
 for (const info of myCart){
     
@@ -73,12 +77,12 @@ for (const info of myCart){
         articleHTML[index].querySelector("img").src = data.imageUrl
         articleHTML[index].querySelector(".itemQuantity").value = info[2]; // quantité de produit
         articleHTML[index].querySelector(".itemQuantity").setAttribute("value", info[2]) // quantité de produit dans l'attribut
-        articleHTML[index].style.display = "flex";
         index ++
         refreshPrixTotal()
     });
 }
 
+refreshNbArticles()
 // Gérer la suppression d'un élément
 const buttonsDelete = document.querySelectorAll(".deleteItem");
 buttonsDelete.forEach((btndelete) => {
@@ -113,7 +117,6 @@ quantityItems.forEach((quantityItem) => {
         else {
             quantityItem.setAttribute("value", quantityItem.value)
         }
-
         
         let parentQuantity = quantityItem.parentElement.parentElement.parentElement.parentElement;
         let idChange = `${parentQuantity.getAttribute("data-id")} ${parentQuantity.getAttribute("data-color")}`
@@ -169,12 +172,14 @@ buttonSubmit.addEventListener("click", (button)=>{
     // Validation du prenom
 
     else if (!contact.firstName || !contact.firstName.match(nameRegex)){
+        
         if (!contact.firstName){
             alert("Veuillez saisir votre prénom svp ")
         }
         else {
             alert("Veuillez ne saisir que des lettres dans le champs prénom svp ")
         }
+        
     }
 
     // VALIDATION DE l'EMAIL
