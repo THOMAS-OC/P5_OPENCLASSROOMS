@@ -10,10 +10,8 @@ let listIdCart = []
 
 // Fonction d'affichage du formulaire
 const displayForm = () => {
-    orderForm.style.visibility = localStorage.length > 0 ? "visible":"hidden"
-    document.querySelector("h1").innerText = localStorage.length > 0 ? "Votre panier":"Votre panier est vide"
+    orderForm.style.visibility = localStorage ? "hidden":"visible"
 }
-
 displayForm()
 
 
@@ -50,39 +48,11 @@ const refreshArrayCart = () => {
 refreshArrayCart()
 console.log(myCart);
 
-// Création d'un nombre d'articles html égal au nombre d'élément dans le storage
-let nbArticles = localStorage.length
-let createIndex = 1
-while (createIndex < nbArticles){
-    createIndex ++
-    let cloneArticle = document.querySelector(".cart__item").cloneNode(true)
-    sectionArticle.appendChild(cloneArticle)
-}
-refreshNbArticles()
-
-// On requête l'API pour obtenir les infos
-let index = 0 // variable de l'élément html "article" en cours !
-for (const info of myCart){
-    
-    fetch(`${URLCONST.URL_BASE}${URLCONST.ENDPOINT_GET}${info[0]}`)
-    .then(res => res.json())
-    .then(data => {
-        articleHTML[index].setAttribute("data-id", info[0])
-        articleHTML[index].setAttribute("data-color", info[1])
-        articleHTML[index].querySelector(".cart__item__content__description").innerHTML = `<h2> ${data.name} <h2> <p> ${info[1]} </p> <p> <span class="articlePrice"> ${data.price} </span> € </p>`
-        articleHTML[index].querySelector("img").src = data.imageUrl
-        articleHTML[index].querySelector(".itemQuantity").value = info[2]; // quantité de produit
-        articleHTML[index].querySelector(".itemQuantity").setAttribute("value", info[2]) // quantité de produit dans l'attribut
-        articleHTML[index].style.display = "flex";
-        index ++
-        refreshPrixTotal()
-    });
-}
-
 // Gérer la suppression d'un élément
 const buttonsDelete = document.querySelectorAll(".deleteItem");
 buttonsDelete.forEach((btndelete) => {
     btndelete.addEventListener("click", ()=>{
+        alert("test")
         let parentButton = btndelete.parentElement.parentElement.parentElement.parentElement
         let idDelete = `${parentButton.getAttribute("data-id")} ${parentButton.getAttribute("data-color")}`
         localStorage.removeItem(idDelete)
@@ -97,7 +67,6 @@ buttonsDelete.forEach((btndelete) => {
 
 // Gérer la modification de quantité d'un article
 const quantityItems = document.querySelectorAll(".itemQuantity");
-
 quantityItems.forEach((quantityItem) => {
     quantityItem.addEventListener("change", () => {
 
@@ -113,7 +82,6 @@ quantityItems.forEach((quantityItem) => {
         else {
             quantityItem.setAttribute("value", quantityItem.value)
         }
-
         
         let parentQuantity = quantityItem.parentElement.parentElement.parentElement.parentElement;
         let idChange = `${parentQuantity.getAttribute("data-id")} ${parentQuantity.getAttribute("data-color")}`
@@ -138,8 +106,6 @@ let contact = {
 }
 
 // VALIDATION FORM
-
-
 buttonSubmit.addEventListener("click", (button)=>{
     button.preventDefault()
     let validForm = false;  
