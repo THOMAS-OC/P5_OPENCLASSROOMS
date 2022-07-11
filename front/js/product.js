@@ -15,7 +15,7 @@ const button = document.getElementById("addToCart")
 fetch(`${URLCONST.URL_BASE}${URLCONST.ENDPOINT_GET}${id}`)
 .then( rep => 
     {
-        if (rep.ok === true) 
+        if (rep.ok === true)
             rep.json()
             .then(data => {
                 // informations
@@ -24,10 +24,9 @@ fetch(`${URLCONST.URL_BASE}${URLCONST.ENDPOINT_GET}${id}`)
                 elementDescription.innerText = data.description
                 
                 // picture
-                let img = document.createElement("img"); // Création d'un élément HTML img
-                img.src = data.imageUrl;
-                img.alt = data.altTxt;
+                let img = document.createElement("a"); // Création d'un élément HTML img
                 elementPicture.appendChild(img); // Ajout de l'élément crée dans le parent
+                img.outerHTML = `<img src="${data.imageUrl}" alt="${data.altTxt}">`
 
                 //title
                 document.title = data.name
@@ -50,12 +49,9 @@ fetch(`${URLCONST.URL_BASE}${URLCONST.ENDPOINT_GET}${id}`)
     }
 );
 
-
-
-
 button.addEventListener("click", () =>{
 
-   
+   // VERIFICATION DES CHAMPS DE FORMULAIRE
     if (!elementChoiceColors.value) {
         alert("Veuillez sélectionner une couleur")
     }
@@ -68,24 +64,19 @@ button.addEventListener("click", () =>{
         alert("Veuillez saisir un nombre entre 1 et 100 dans le champs 'nombre d'articles' svp");
     }
 
-
     else {
         let idUnique = `${id} ${elementChoiceColors.value}`
-        let quantityCommand = quantity.value;
-        quantityCommand = parseInt(quantityCommand)
-    
-        if (localStorage.getItem(idUnique)){
-            alert("Quantité d'article modifée !")
-            let quantityPanier = localStorage.getItem(idUnique);
-            quantityPanier = parseInt(quantityPanier)
-            let newQuantityPanier = quantityPanier + quantityCommand;
-            localStorage.removeItem(idUnique);
-            localStorage.setItem(idUnique, newQuantityPanier);
-        }
 
+        // MODIFICATION DES QUANITTES
+        if (localStorage.getItem(idUnique)){
+            localStorage.setItem(idUnique, parseInt(localStorage.getItem(idUnique)) + parseInt(quantity.value));
+            alert("Quantité d'article modifiée ! quantité totale = " + localStorage.getItem(idUnique))
+        }
+        
+        // AJOUT DE l'ARTICLE AU PANIER
         else {
+            localStorage.setItem(idUnique, parseInt(quantity.value))
             alert("Article ajouté au panier !")
-            localStorage.setItem(idUnique, quantityCommand) // enregistrement d'une data pour la session
         }
 
     }
