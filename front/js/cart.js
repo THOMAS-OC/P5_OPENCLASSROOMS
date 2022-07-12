@@ -5,7 +5,6 @@ const articleHTML = document.getElementsByTagName("article")
 const buttonSubmit = document.getElementById("order")
 const orderForm = document.querySelector(".cart__order")
 
-let myCart = [];
 let listIdCart = []
 
 // Fonction d'affichage du formulaire
@@ -39,41 +38,25 @@ const refreshPrixTotal = () => {
 }
 
 // Fonction de rafraichissement du panier JavaScript
-const refreshArrayCart = () => {
-    myCart = []
-    listIdCart = []
-    for (const details of Object.keys(localStorage)){
-        let productArray = [];
-        productArray.push(details.split(" ")[0]);
-        listIdCart.push(details.split(" ")[0]);
-        productArray.push(details.split(" ")[1]);
-        productArray.push(localStorage.getItem(details));
-        myCart.push(productArray);
-    }
-}
+let objectCart = []
 
 const refreshObjectCart = () => {
-    const objectCart = []
+    listIdCart = []
+    objectCart = []
     for (const details of Object.keys(localStorage)){
-        let obj = {
-            id:"",
-            color:"",
-            quantity:0
-        };
+        let obj = {};
         obj.id = details.split(" ")[0]
         obj.color = details.split(" ")[1]
+        listIdCart.push(details.split(" ")[0]);
         obj.quantity = localStorage.getItem(details)
         objectCart.push(obj);
-        console.log(obj);
     }
-    console.log(objectCart);
-    return objectCart
+
 }
 
-refreshArrayCart()
-// 
-let supervar = refreshObjectCart()
-console.log(supervar);
+refreshObjectCart()
+console.log(objectCart);
+
 
 
 // Création d'un nombre d'articles html égal au nombre d'élément dans le storage
@@ -88,17 +71,17 @@ while (createIndex < nbArticles){
 window.setTimeout( () =>{
     // AFFICHAGE DES INFOS
     let index = 0 // variable de l'élément html "article" en cours !
-    for (const info of myCart){
+    for (const info of objectCart){
         
-        fetch(`${URLCONST.URL_BASE}${URLCONST.ENDPOINT_GET}${info[0]}`)
+        fetch(`${URLCONST.URL_BASE}${URLCONST.ENDPOINT_GET}${info.id}`)
         .then(res => res.json())
         .then(data => {
-            articleHTML[index].setAttribute("data-id", info[0])
-            articleHTML[index].setAttribute("data-color", info[1])
-            articleHTML[index].querySelector(".cart__item__content__description").innerHTML = `<h2> ${data.name} <h2> <p> ${info[1]} </p> <p> <span class="articlePrice"> ${data.price} </span> € </p>`
+            articleHTML[index].setAttribute("data-id", info.id)
+            articleHTML[index].setAttribute("data-color", info.color)
+            articleHTML[index].querySelector(".cart__item__content__description").innerHTML = `<h2> ${data.name} <h2> <p> ${info.color} </p> <p> <span class="articlePrice"> ${data.price} </span> € </p>`
             articleHTML[index].querySelector("img").src = data.imageUrl
-            articleHTML[index].querySelector(".itemQuantity").value = info[2]; // quantité de produit
-            articleHTML[index].querySelector(".itemQuantity").setAttribute("value", info[2]) // quantité de produit dans l'attribut
+            articleHTML[index].querySelector(".itemQuantity").value = info.quantity; // quantité de produit
+            articleHTML[index].querySelector(".itemQuantity").setAttribute("value", info.quantity) // quantité de produit dans l'attribut
             index ++
             refreshPrixTotal()
         }); 
@@ -119,7 +102,7 @@ buttonsDelete.forEach((btndelete) => {
         btndelete.parentElement.parentElement.parentElement.parentElement.remove();
         refreshNbArticles()
         refreshPrixTotal()
-        refreshArrayCart()
+        refreshObjectCart()
         displayForm()
     })
 })
@@ -152,7 +135,7 @@ quantityItems.forEach((quantityItem) => {
 
         // actualisation du prix et du panier
         refreshPrixTotal()
-        refreshArrayCart()
+        refreshObjectCart()
     })
 })
 
