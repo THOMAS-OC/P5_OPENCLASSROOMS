@@ -52,8 +52,29 @@ const refreshArrayCart = () => {
     }
 }
 
+const refreshObjectCart = () => {
+    const objectCart = []
+    for (const details of Object.keys(localStorage)){
+        let obj = {
+            id:"",
+            color:"",
+            quantity:0
+        };
+        obj.id = details.split(" ")[0]
+        obj.color = details.split(" ")[1]
+        obj.quantity = localStorage.getItem(details)
+        objectCart.push(obj);
+        console.log(obj);
+    }
+    console.log(objectCart);
+    return objectCart
+}
+
 refreshArrayCart()
-console.log(myCart);
+// 
+let supervar = refreshObjectCart()
+console.log(supervar);
+
 
 // Création d'un nombre d'articles html égal au nombre d'élément dans le storage
 let nbArticles = localStorage.length
@@ -64,23 +85,28 @@ while (createIndex < nbArticles){
     sectionArticle.appendChild(cloneArticle)
 }
 
-// AFFICHAGE DES INFOS
-let index = 0 // variable de l'élément html "article" en cours !
-for (const info of myCart){
-    
-    fetch(`${URLCONST.URL_BASE}${URLCONST.ENDPOINT_GET}${info[0]}`)
-    .then(res => res.json())
-    .then(data => {
-        articleHTML[index].setAttribute("data-id", info[0])
-        articleHTML[index].setAttribute("data-color", info[1])
-        articleHTML[index].querySelector(".cart__item__content__description").innerHTML = `<h2> ${data.name} <h2> <p> ${info[1]} </p> <p> <span class="articlePrice"> ${data.price} </span> € </p>`
-        articleHTML[index].querySelector("img").src = data.imageUrl
-        articleHTML[index].querySelector(".itemQuantity").value = info[2]; // quantité de produit
-        articleHTML[index].querySelector(".itemQuantity").setAttribute("value", info[2]) // quantité de produit dans l'attribut
-        index ++
-        refreshPrixTotal()
-    });
-}
+window.setTimeout( () =>{
+    // AFFICHAGE DES INFOS
+    let index = 0 // variable de l'élément html "article" en cours !
+    for (const info of myCart){
+        
+        fetch(`${URLCONST.URL_BASE}${URLCONST.ENDPOINT_GET}${info[0]}`)
+        .then(res => res.json())
+        .then(data => {
+            articleHTML[index].setAttribute("data-id", info[0])
+            articleHTML[index].setAttribute("data-color", info[1])
+            articleHTML[index].querySelector(".cart__item__content__description").innerHTML = `<h2> ${data.name} <h2> <p> ${info[1]} </p> <p> <span class="articlePrice"> ${data.price} </span> € </p>`
+            articleHTML[index].querySelector("img").src = data.imageUrl
+            articleHTML[index].querySelector(".itemQuantity").value = info[2]; // quantité de produit
+            articleHTML[index].querySelector(".itemQuantity").setAttribute("value", info[2]) // quantité de produit dans l'attribut
+            index ++
+            refreshPrixTotal()
+        }); 
+    }},100
+  
+)
+
+
 
 refreshNbArticles()
 // Gérer la suppression d'un élément
@@ -161,50 +187,40 @@ buttonSubmit.addEventListener("click", (button)=>{
     // Validation du nom de famille
 
     if (!contact.lastName || !contact.lastName.match(nameRegex)){
-        if (!contact.lastName){
-            alert("Veuillez saisir votre nom svp ")
-        }
-        else {
-            alert("Veuillez ne saisir que des lettres dans le champs nom svp ")
-        }
+
+        if (!contact.lastName) alert("Veuillez saisir votre nom svp ");
+        
+        else alert("Veuillez ne saisir que des lettres dans le champs nom svp ")
+        
     }
 
     // Validation du prenom
 
     else if (!contact.firstName || !contact.firstName.match(nameRegex)){
         
-        if (!contact.firstName){
-            alert("Veuillez saisir votre prénom svp ")
-        }
-        else {
-            alert("Veuillez ne saisir que des lettres dans le champs prénom svp ")
-        }
+        if (!contact.firstName) alert("Veuillez saisir votre prénom svp ")
+        
+        else alert("Veuillez ne saisir que des lettres dans le champs prénom svp ")
         
     }
 
     // VALIDATION DE l'EMAIL
 
     else if (!contact.email || !contact.email.match(emailRegex)){
-        if (!contact.email){
-            alert("Veuillez saisir votre email svp ")
-        }
-        else {
-            alert("Veuillez saisir une adresse email valide svp ")
-        }
+
+        if (!contact.email) alert("Veuillez saisir votre email svp ")
+        
+        else alert("Veuillez saisir une adresse email valide svp ")
+        
     }
 
 
-    else if (!contact.city){
-        alert("Veuillez renseigner une ville")
-    }
+    else if (!contact.city) alert("Veuillez renseigner une ville");
     
-    else if (!contact.address){
-        alert("Veuillez renseigner votre adresse")
-    }
+    else if (!contact.address) alert("Veuillez renseigner votre adresse");
 
-    else {
-        validForm = true;
-    }
+    else validForm = true;
+    
 
     
     // Paramétrage de la requete post
@@ -233,6 +249,5 @@ buttonSubmit.addEventListener("click", (button)=>{
         })
         .catch(error => console.log('error', error));
     }
-
 
 })
