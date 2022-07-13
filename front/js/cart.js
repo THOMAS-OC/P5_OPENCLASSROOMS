@@ -232,7 +232,7 @@ buttonSubmit.addEventListener("click", (button)=>{
 
         else if (inputForm.getAttribute("name") == "city"){
         
-            if (!contactForm.address) {
+            if (!contactForm.city) {
                 validForm.push(false)
                 cityErrorMsg.innerText = "Veuillez renseigner une ville";
             } 
@@ -251,7 +251,7 @@ buttonSubmit.addEventListener("click", (button)=>{
 
                 validForm.push(false)
 
-                if (!contactForm.lastName) emailErrorMsg.innerHTML = "Veuillez saisir un email svp";
+                if (!contactForm.email) emailErrorMsg.innerHTML = "Veuillez saisir un email svp";
                 
                 else emailErrorMsg.innerText = "Veuillez saisir un email valide svp"
                 
@@ -265,9 +265,6 @@ buttonSubmit.addEventListener("click", (button)=>{
 
     })
 
-    alert(validForm)
-
-    
     // Paramétrage de la requete post
     let myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
@@ -288,7 +285,6 @@ buttonSubmit.addEventListener("click", (button)=>{
     // formulaire non valide
 
     if(validForm.includes(false)){
-        alert("Formulaire non correcte")
     }
 
     // Envoie des données au back-end
