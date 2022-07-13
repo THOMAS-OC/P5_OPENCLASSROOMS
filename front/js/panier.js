@@ -1,27 +1,26 @@
-/* Travailler avec le panier Javascript et à chaque opération CRUD, 
-enregistrer ce panier dans le storage  */
+/* Travailler avec le basket Javascript et à chaque opération CRUD, 
+puis enregistrer le basket modifié dans le storage. */
 
-// PANIER TYPE
+// BASKET TYPE
 let example = [
 
     { id: "1",
-      prix: 25,
       color: "red",
       quantity: 1
     }
 
 ]
-window.localStorage.setItem("panier", JSON.stringify(example))
+window.localStorage.setItem("basket", JSON.stringify(example))
 
-// !!------- Fonction pour envoyer le panier JS dans le storage : OK
+// ! Fonction pour envoyer le basket JS dans le storage : OK
 const saveCartInStorage = (obj) => {
-    window.localStorage.setItem("panier", JSON.stringify(obj))
+    window.localStorage.setItem("basket", JSON.stringify(obj))
 }
 
 
-// !!------- Fonction pour convertir le panier du storage vers un panier JS : OK
+// ! Fonction pour convertir le basket du storage vers un basket JS : OK
 const exportCartFromStorage = () => {
-    let rawCart = window.localStorage.getItem("panier")
+    let rawCart = window.localStorage.getItem("basket")
     let objectCart = JSON.parse(rawCart)
     return objectCart;
 }
@@ -30,7 +29,7 @@ let myCart = exportCartFromStorage()
 
 
 
-/* !!------- Fonction pour ajouter un article au panier
+/* !!------- Fonction pour ajouter un article au basket
 Si l'article est déjà présent, incrémenter la quantité */
 
 const pushArticle = (article) => {
@@ -56,7 +55,6 @@ const pushArticle = (article) => {
 
 let newArticle = {
     id: "1",
-    prix: 50,
     color: "blue",
     quantity: 4
 }
@@ -66,11 +64,11 @@ pushArticle(newArticle)
 console.log(myCart);
 
 
-// !!------- Fonction pour retirer un article du panier
+// !!------- Fonction pour retirer un article du basket
 
 
-// !!------- Fonction pour modifier la quantité d'un article dans le panier
-const updateArticle = (article, newQuantity) => {
+// !!------- Fonction pour modifier la quantité d'un article dans le basket
+const updateQuantity = (article, newQuantity) => {
 
     for (let obj of myCart){
 
@@ -86,7 +84,6 @@ const updateArticle = (article, newQuantity) => {
 
 let newArticle2 = {
     id: "1",
-    prix: 50,
     color: "blue",
     quantity: 100
 }

@@ -1,4 +1,53 @@
 import * as URLCONST from "./constantes.js"
+let myBasket = [] // Variable du panier
+let listIdBasket = []
+// NOUVEAU PANIER
+
+// ! Fonction pour exporter le panier JS dans le storage
+const saveCartInStorage = (obj) => {
+    window.localStorage.setItem("basket", JSON.stringify(obj))
+}
+
+// ! Fonction pour importer le panier du storage vers un objet JavaScript
+const exportCartFromStorage = () => {
+    let rawCart = window.localStorage.getItem("basket")
+    let objectCart = JSON.parse(rawCart)
+    return objectCart;
+}
+
+// !!------- Fonction pour modifier la quantité d'un article dans le basket
+const updateQuantity = (article, newQuantity) => {
+    for (let obj of myBasket){
+        if(obj.id == article.id && obj.color == article.color){
+            console.log("Modif des quantités");
+            obj.quantity = newQuantity
+            saveCartInStorage(myBasket)
+        }
+    }
+}
+
+
+
+// INITIALISATION DU PANIER
+
+if (window.localStorage.getItem("basket")){
+    myBasket = exportCartFromStorage()
+}
+
+else {
+    window.localStorage.setItem("basket", JSON.stringify(myBasket))
+}
+
+// Fonctions pour faire une liste des identifiants
+const listIds = () => {
+    listIdBasket = []
+    for (let article of myBasket){
+        listIdBasket.push(article.id)
+    }
+}
+
+listIds()
+
 
 // ELEMENTS HTML
 const sectionArticle = document.querySelector("#cart__items");
@@ -145,6 +194,15 @@ quantityItems.forEach((quantityItem) => {
         let parentQuantity = quantityItem.parentElement.parentElement.parentElement.parentElement;
         let idChange = `${parentQuantity.getAttribute("data-id")} ${parentQuantity.getAttribute("data-color")}`
 
+        // MODIFICATION DANS LE NOUVEAU PANIER
+        let updateArticle = {
+            id : parentQuantity.getAttribute("data-id"),
+            color : parentQuantity.getAttribute("data-color"),
+            quantity : quantityItem.value
+        }
+        updateQuantity(updateArticle, updateArticle.quantity)
+        
+
         // Actualisation du storage
         localStorage.setItem(idChange, quantityItem.value)
 
@@ -269,7 +327,7 @@ buttonSubmit.addEventListener("click", (button)=>{
     let myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
-    let products = listIdCart // Affectation des id produits dans la clef attendu par le back-end
+    let products = listIdBasket // Affectation des id produits dans la clef attendu par le back-end
     let rawData = JSON.stringify({
         contactForm,
         products

@@ -1,4 +1,56 @@
 import * as URLCONST from "./constantes.js"
+let myBasket = [] // Variable du panier
+
+// ----- FUNCTIONS BASKET
+
+// ! Fonction pour exporter le panier JS dans le storage
+const saveCartInStorage = (obj) => {
+    window.localStorage.setItem("basket", JSON.stringify(obj))
+}
+
+// ! Fonction pour importer le panier du storage vers un objet JavaScript
+const exportCartFromStorage = () => {
+    let rawCart = window.localStorage.getItem("basket")
+    let objectCart = JSON.parse(rawCart)
+    return objectCart;
+}
+
+/* ! Fonction pour ajouter un article au panier si l'article est déjà présent, incrémentation de la quantité */
+
+const pushArticle = (article) => {
+    let method = "push"
+
+    for (let obj of myBasket){
+
+        if(obj.id == article.id && obj.color == article.color){
+            alert("Modification des quantités")
+            obj.quantity = parseInt(obj.quantity) + parseInt(article.quantity)
+            method = "notPush"
+            saveCartInStorage(myBasket)
+        }
+        
+    }
+
+    if (method == "push"){
+        alert("Nouvelle article")
+        myBasket.push(article)
+        saveCartInStorage(myBasket)
+    }
+
+}
+
+
+// Si panier existant
+if (window.localStorage.getItem("basket")){
+    myBasket = exportCartFromStorage()
+}
+
+else {
+    window.localStorage.setItem("basket", JSON.stringify(myBasket))
+}
+
+
+
 
 const url = new URL(location.href); // Récupérer l'url
 const id = url.searchParams.get("id"); // Récupérer la valeur de l'attribut id
@@ -50,6 +102,13 @@ fetch(`${URLCONST.URL_BASE}${URLCONST.ENDPOINT_GET}${id}`)
 );
 
 button.addEventListener("click", () =>{
+    // article du nouveau type de panier
+    let newArticle = {
+        id : id,
+        color : elementChoiceColors.value,
+        quantity : quantity.value
+    }
+
 
    // VERIFICATION DES CHAMPS DE FORMULAIRE
     if (!elementChoiceColors.value) {
@@ -65,6 +124,10 @@ button.addEventListener("click", () =>{
     }
 
     else {
+
+        // push vers le nouveau type de panier
+        pushArticle(newArticle)
+
         let idUnique = `${id} ${elementChoiceColors.value}`
 
         // MODIFICATION DES QUANITTES
