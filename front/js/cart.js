@@ -1,11 +1,31 @@
 import * as URLCONST from "./constantes.js"
 
+// ELEMENTS HTML
 const sectionArticle = document.querySelector("#cart__items");
 const articleHTML = document.getElementsByTagName("article")
 const buttonSubmit = document.getElementById("order")
 const orderForm = document.querySelector(".cart__order")
 
-let listIdCart = []
+const firstNameErrorMsg = document.getElementById("firstNameErrorMsg")
+const lastNameErrorMsg = document.getElementById("lastNameErrorMsg")
+const addressErrorMsg = document.getElementById("addressErrorMsg")
+const cityErrorMsg = document.getElementById("cityErrorMsg")
+const emailErrorMsg = document.getElementById("emailErrorMsg")
+
+const allForm = document.querySelectorAll(".cart__order__form__question")
+
+// VARIABLES PANIER
+let listIdCart = [] // identifiants des produits
+let objectCart = [] // Tableau d'objet représentant le panier
+
+// 
+let contactForm = {
+    firstName : "",
+    lastName : "",
+    address : "",
+    city : "",
+    email : "",
+}
 
 // Fonction d'affichage du formulaire
 const displayForm = () => {
@@ -38,8 +58,6 @@ const refreshPrixTotal = () => {
 }
 
 // Fonction de rafraichissement du panier JavaScript
-let objectCart = []
-
 const refreshObjectCart = () => {
     listIdCart = []
     objectCart = []
@@ -55,9 +73,6 @@ const refreshObjectCart = () => {
 }
 
 refreshObjectCart()
-console.log(objectCart);
-
-
 
 // Création d'un nombre d'articles html égal au nombre d'élément dans le storage
 let nbArticles = localStorage.length
@@ -84,6 +99,7 @@ window.setTimeout( () =>{
             articleHTML[index].querySelector(".itemQuantity").setAttribute("value", info.quantity) // quantité de produit dans l'attribut
             index ++
             refreshPrixTotal()
+            refreshNbArticles()
         }); 
     }},100
   
@@ -91,7 +107,6 @@ window.setTimeout( () =>{
 
 
 
-refreshNbArticles()
 // Gérer la suppression d'un élément
 const buttonsDelete = document.querySelectorAll(".deleteItem");
 buttonsDelete.forEach((btndelete) => {
@@ -139,15 +154,6 @@ quantityItems.forEach((quantityItem) => {
     })
 })
 
-// Récupérer les info de l'utilisateur
-
-let contact = {
-    firstName : "",
-    lastName : "",
-    address : "",
-    city : "",
-    email : "",
-}
 
 // VALIDATION FORM
 
@@ -156,53 +162,115 @@ buttonSubmit.addEventListener("click", (button)=>{
     button.preventDefault()
     let validForm = false;  
 
-    // pour chaque clefs de l'objet contact, on associe la valeur du champs correspondant dans le HTML
-    for (const keys of Object.keys(contact)){
-        contact[keys] = document.getElementById(keys).value.trim() // propriétés de l'objets et ID Html correspondant nommés identiquement
+    // pour chaque clefs de l'objet contactForm, on associe la valeur du champs correspondant dans le HTML
+    for (const keys of Object.keys(contactForm)){
+        contactForm[keys] = document.getElementById(keys).value.trim() // propriétés de l'objets et ID Html correspondant nommés identiquement
     }
 
-    contact.lastName = contact.lastName.toUpperCase()
-    contact.firstName = contact.firstName.toLowerCase()
+    contactForm.lastName = contactForm.lastName.toUpperCase()
+    contactForm.firstName = contactForm.firstName.toLowerCase()
     
     let nameRegex = /^[A-Za-zéàè]+$/;
     let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
-    // Validation du nom de famille
+    allForm.forEach((form) => {
+        let inputForm = form.querySelector("input")
+        console.log(inputForm.getAttribute("name"));
+        form.style.backgroundColor = "red"
 
-    if (!contact.lastName || !contact.lastName.match(nameRegex)){
+        // validation du prenom
+        if (inputForm.getAttribute("name") == "firstName"){
+            alert("on test le prenom")
 
-        if (!contact.lastName) alert("Veuillez saisir votre nom svp ");
+            if (!contactForm.firstName || !contactForm.firstName.match(nameRegex)){
+                validForm = false
+                
+                if (!contactForm.firstName) firstNameErrorMsg.innerText = "Veuillez saisir votre prénom svp"
+                    
+                else firstNameErrorMsg.innerText = "Veuillez ne saisir que des lettres dans le champs prénom svp "
+                    
+            }
+
+            else{
+                validForm = true
+            }
+
+        }
+
+        // validation du nom
+        else if (inputForm.getAttribute("name") == "lastName"){
+            alert("On test le nom")
+
+            if (!contactForm.lastName || !contactForm.lastName.match(nameRegex)){
+                validForm = false
+
+                if (!contactForm.lastName) lastNameErrorMsg.innerHTML = "Veuillez saisir votre nom svp";
+                
+                else lastNameErrorMsg.innerText = "Veuillez ne saisir que des lettres dans le champs nom svp "
+                
+            }
+
+            else{
+                validForm = true
+            }
+
+        }
+
+        // validation de l'adresse
+
+        else if (inputForm.getAttribute("name") == "address"){
+            alert("On test l'adresse ")
+
+            if (!contactForm.address){
+                validForm = false
+                addressErrorMsg.innerText = "Veuillez renseigner votre adresse";
+            } 
+
+            else{
+                validForm = true
+            }
+
+        }
+
+        // validation de la ville
+
+        else if (inputForm.getAttribute("name") == "city"){
+            alert("On test la ville")
         
-        else alert("Veuillez ne saisir que des lettres dans le champs nom svp ")
-        
-    }
+            if (!contactForm.address) {
+                validForm = false
+                addressErrorMsg.innerText = "Veuillez renseigner votre adresse";
+            } 
 
-    // Validation du prenom
+            else{
+                validForm = true
+            }
 
-    else if (!contact.firstName || !contact.firstName.match(nameRegex)){
-        
-        if (!contact.firstName) alert("Veuillez saisir votre prénom svp ")
-        
-        else alert("Veuillez ne saisir que des lettres dans le champs prénom svp ")
-        
-    }
+        }
 
-    // VALIDATION DE l'EMAIL
+        // Validation de l'email
 
-    else if (!contact.email || !contact.email.match(emailRegex)){
+        else if (inputForm.getAttribute("name") == "email"){
+            alert("On test le nom")
 
-        if (!contact.email) alert("Veuillez saisir votre email svp ")
-        
-        else alert("Veuillez saisir une adresse email valide svp ")
-        
-    }
+            if (!contactForm.email || !contactForm.email.match(emailRegex)){
 
+                validForm = false
 
-    else if (!contact.city) alert("Veuillez renseigner une ville");
-    
-    else if (!contact.address) alert("Veuillez renseigner votre adresse");
+                if (!contactForm.lastName) emailErrorMsg.innerHTML = "Veuillez saisir un email svp";
+                
+                else emailErrorMsg.innerText = "Veuillez saisir un email valide svp"
+                
+            }
 
-    else validForm = true;
+            else{
+                validForm = true
+            }
+
+        }
+
+})
+
     
 
     
@@ -212,7 +280,7 @@ buttonSubmit.addEventListener("click", (button)=>{
 
     let products = listIdCart // Affectation des id produits dans la clef attendu par le back-end
     let rawData = JSON.stringify({
-        contact,
+        contactForm,
         products
     });
 
