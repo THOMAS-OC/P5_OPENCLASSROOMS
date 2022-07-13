@@ -160,7 +160,7 @@ quantityItems.forEach((quantityItem) => {
 
 buttonSubmit.addEventListener("click", (button)=>{
     button.preventDefault()
-    let validForm = false;  
+    let validForm = [];  
 
     // pour chaque clefs de l'objet contactForm, on associe la valeur du champs correspondant dans le HTML
     for (const keys of Object.keys(contactForm)){
@@ -176,15 +176,13 @@ buttonSubmit.addEventListener("click", (button)=>{
     allForm.forEach((form) => {
         let inputForm = form.querySelector("input")
         console.log(inputForm.getAttribute("name"));
-        form.style.backgroundColor = "red"
 
         // validation du prenom
         if (inputForm.getAttribute("name") == "firstName"){
-            alert("on test le prenom")
 
             if (!contactForm.firstName || !contactForm.firstName.match(nameRegex)){
-                validForm = false
-                
+                validForm.push(false)
+
                 if (!contactForm.firstName) firstNameErrorMsg.innerText = "Veuillez saisir votre prénom svp"
                     
                 else firstNameErrorMsg.innerText = "Veuillez ne saisir que des lettres dans le champs prénom svp "
@@ -192,17 +190,16 @@ buttonSubmit.addEventListener("click", (button)=>{
             }
 
             else{
-                validForm = true
+                validForm.push(true)
             }
 
         }
 
         // validation du nom
         else if (inputForm.getAttribute("name") == "lastName"){
-            alert("On test le nom")
 
             if (!contactForm.lastName || !contactForm.lastName.match(nameRegex)){
-                validForm = false
+                validForm.push(false)
 
                 if (!contactForm.lastName) lastNameErrorMsg.innerHTML = "Veuillez saisir votre nom svp";
                 
@@ -211,7 +208,7 @@ buttonSubmit.addEventListener("click", (button)=>{
             }
 
             else{
-                validForm = true
+                validForm.push(true)
             }
 
         }
@@ -219,15 +216,14 @@ buttonSubmit.addEventListener("click", (button)=>{
         // validation de l'adresse
 
         else if (inputForm.getAttribute("name") == "address"){
-            alert("On test l'adresse ")
 
             if (!contactForm.address){
-                validForm = false
+                validForm.push(false)
                 addressErrorMsg.innerText = "Veuillez renseigner votre adresse";
             } 
 
             else{
-                validForm = true
+                validForm.push(true)
             }
 
         }
@@ -235,15 +231,14 @@ buttonSubmit.addEventListener("click", (button)=>{
         // validation de la ville
 
         else if (inputForm.getAttribute("name") == "city"){
-            alert("On test la ville")
         
             if (!contactForm.address) {
-                validForm = false
-                addressErrorMsg.innerText = "Veuillez renseigner votre adresse";
+                validForm.push(false)
+                cityErrorMsg.innerText = "Veuillez renseigner une ville";
             } 
 
             else{
-                validForm = true
+                validForm.push(true)
             }
 
         }
@@ -251,11 +246,10 @@ buttonSubmit.addEventListener("click", (button)=>{
         // Validation de l'email
 
         else if (inputForm.getAttribute("name") == "email"){
-            alert("On test le nom")
 
             if (!contactForm.email || !contactForm.email.match(emailRegex)){
 
-                validForm = false
+                validForm.push(false)
 
                 if (!contactForm.lastName) emailErrorMsg.innerHTML = "Veuillez saisir un email svp";
                 
@@ -264,14 +258,14 @@ buttonSubmit.addEventListener("click", (button)=>{
             }
 
             else{
-                validForm = true
+                validForm.push(true)
             }
 
         }
 
-})
+    })
 
-    
+    alert(validForm)
 
     
     // Paramétrage de la requete post
@@ -291,14 +285,23 @@ buttonSubmit.addEventListener("click", (button)=>{
         redirect: 'follow'
     };
 
+    // formulaire non valide
+
+    if(validForm.includes(false)){
+        alert("Formulaire non correcte")
+    }
+
     // Envoie des données au back-end
-    if (validForm){
+    else{
+        
         fetch(`${URLCONST.URL_BASE}${URLCONST.ENDPOINT_POST}`, requestOptions)
         .then(response => response.json())
         .then((result) => {
             location.assign(location.href.replace("cart.html", `confirmation.html?id=${result.orderId}`))
         })
         .catch(error => console.log('error', error));
+        
     }
+
 
 })
