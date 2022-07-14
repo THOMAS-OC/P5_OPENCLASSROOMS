@@ -63,11 +63,6 @@ const emailErrorMsg = document.getElementById("emailErrorMsg")
 
 const allForm = document.querySelectorAll(".cart__order__form__question")
 
-// VARIABLES PANIER
-let listIdCart = [] // identifiants des produits
-let objectCart = [] // Tableau d'objet représentant le panier
-
-// 
 let contactForm = {
     firstName : "",
     lastName : "",
@@ -98,11 +93,7 @@ displayForm()
 
 
 // Fonction de rafraichissement du nombre d'articles
-const refreshNbArticles = () => {
-    let nbArticle = localStorage.length;
-    let ifPlural = nbArticle > 1 ? "s":"";
-    document.querySelector("#totalQuantity").innerText = `${nbArticle} article${ifPlural}`;
-}
+
 
 // Fonction de rafraichissement du prix total
 const refreshPrixTotal = () => {
@@ -113,25 +104,9 @@ const refreshPrixTotal = () => {
     document.querySelector("#totalPrice").innerText = priceTotal;
 }
 
-// Fonction de rafraichissement du panier JavaScript
-const refreshObjectCart = () => {
-    listIdCart = []
-    objectCart = []
-    for (const details of Object.keys(localStorage)){
-        let obj = {};
-        obj.id = details.split(" ")[0]
-        obj.color = details.split(" ")[1]
-        listIdCart.push(details.split(" ")[0]);
-        obj.quantity = localStorage.getItem(details)
-        objectCart.push(obj);
-    }
-
-}
-
-refreshObjectCart()
 
 // Création d'un nombre d'articles html égal au nombre d'élément dans le storage
-let nbArticles = localStorage.length
+let nbArticles = myBasket.length
 let createIndex = 1
 while (createIndex < nbArticles){
     createIndex ++
@@ -142,7 +117,7 @@ while (createIndex < nbArticles){
 window.setTimeout( () =>{
     // AFFICHAGE DES INFOS
     let index = 0 // variable de l'élément html "article" en cours !
-    for (const info of objectCart){
+    for (const info of myBasket){
         
         fetch(`${URLCONST.URL_BASE}${URLCONST.ENDPOINT_GET}${info.id}`)
         .then(res => res.json())
@@ -155,7 +130,6 @@ window.setTimeout( () =>{
             articleHTML[index].querySelector(".itemQuantity").setAttribute("value", info.quantity) // quantité de produit dans l'attribut
             index ++
             refreshPrixTotal()
-            refreshNbArticles()
         }); 
     }},100
   
@@ -168,25 +142,12 @@ const buttonsDelete = document.querySelectorAll(".deleteItem");
 buttonsDelete.forEach((btndelete) => {
     btndelete.addEventListener("click", ()=>{
         let parentButton = btndelete.parentElement.parentElement.parentElement.parentElement
-        // NOUVEAU PANIER
-        let articleRemove = {
-            id: parentButton.getAttribute("data-id"),
-            idUnique: `${parentButton.getAttribute("data-id")} ${parentButton.getAttribute("data-color")}`,
-            color: parentButton.getAttribute("data-color"),
-            quantity: 4
-        }
-
-        myBasket = myBasket.filter((item) => item.idUnique !== articleRemove.idUnique)
+        let idUnique = `${parentButton.getAttribute("data-id")} ${parentButton.getAttribute("data-color")}`
         console.log(myBasket);
+        myBasket = myBasket.filter((item) => item.idUnique !== idUnique)
         saveCartInStorage(myBasket)
-
-        let idDelete = `${parentButton.getAttribute("data-id")} ${parentButton.getAttribute("data-color")}`
-        console.log(parentButton);
-        localStorage.removeItem(idDelete)
         btndelete.parentElement.parentElement.parentElement.parentElement.remove();
-        refreshNbArticles()
         refreshPrixTotal()
-        refreshObjectCart()
         displayForm()
     })
 })
@@ -221,14 +182,9 @@ quantityItems.forEach((quantityItem) => {
             quantity : quantityItem.value
         }
         updateQuantity(updateArticle, updateArticle.quantity)
-        
-
-        // Actualisation du storage
-        localStorage.setItem(idChange, quantityItem.value)
 
         // actualisation du prix et du panier
         refreshPrixTotal()
-        refreshObjectCart()
     })
 })
 
@@ -376,6 +332,5 @@ buttonSubmit.addEventListener("click", (button)=>{
         .catch(error => console.log('error', error));
         
     }
-
 
 })

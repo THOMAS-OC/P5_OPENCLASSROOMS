@@ -125,24 +125,7 @@ button.addEventListener("click", () =>{
     }
 
     else {
-
-        // push vers le nouveau type de panier
         pushArticle(newArticle)
-
-        let idUnique = `${id} ${elementChoiceColors.value}`
-
-        // MODIFICATION DES QUANITTES
-        if (localStorage.getItem(idUnique)){
-            localStorage.setItem(idUnique, parseInt(localStorage.getItem(idUnique)) + parseInt(quantity.value));
-            alert("Quantité d'article modifiée ! quantité totale = " + localStorage.getItem(idUnique))
-        }
-        
-        // AJOUT DE l'ARTICLE AU PANIER
-        else {
-            localStorage.setItem(idUnique, parseInt(quantity.value))
-            alert("Article ajouté au panier !")
-        }
-
     }
  
 })
