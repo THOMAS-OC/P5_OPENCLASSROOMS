@@ -1,36 +1,14 @@
 import * as URLCONST from "./constantes.js"
+
+// ----- INITIALISATION DU PANIER -----
+
 let myBasket = [] // Variable du panier
-let listIdBasket = []
-// NOUVEAU PANIER
-
-// ! Fonction pour exporter le panier JS dans le storage
-const saveCartInStorage = (obj) => {
-    window.localStorage.setItem("basket", JSON.stringify(obj))
-}
-
-// ! Fonction pour importer le panier du storage vers un objet JavaScript
-const exportCartFromStorage = () => {
-    let rawCart = window.localStorage.getItem("basket")
-    let objectCart = JSON.parse(rawCart)
-    return objectCart;
-}
-
-// ! Fonction pour modifier la quantité d'un article dans le basket
-const updateQuantity = (article, newQuantity) => {
-    for (let obj of myBasket){
-        if(obj.id == article.id && obj.color == article.color){
-            console.log("Modif des quantités");
-            obj.quantity = newQuantity
-            saveCartInStorage(myBasket)
-            refreshNbArticle()
-        }
-    }
-}
+let listIdBasket = [] // liste des ientifiants produits
 
 // ! Fonction de rafraichissement du nombre d'articles
 const refreshNbArticle = () => {
     let numberArticle = 0
-    
+
     for (let article of myBasket){
         numberArticle += parseInt(article.quantity)
     }
@@ -44,30 +22,31 @@ const refreshNbArticle = () => {
     }
 }
 
+// ! Fonction pour exporter le panier JS dans le storage
+const saveCartInStorage = (obj) => {
+    window.localStorage.setItem("basket", JSON.stringify(obj))
+}
 
-
-// INITIALISATION DU PANIER
+// ! Fonction pour importer le panier du storage vers un objet JavaScript
+const exportCartFromStorage = () => {
+    let rawCart = window.localStorage.getItem("basket")
+    let objectCart = JSON.parse(rawCart)
+    return objectCart;
+}
 
 if (window.localStorage.getItem("basket")){
     myBasket = exportCartFromStorage()
+    refreshNbArticle()
 }
 
 else {
     window.localStorage.setItem("basket", JSON.stringify(myBasket))
+    refreshNbArticle()
 }
 
-// Fonctions pour faire une liste des identifiants
-const listIds = () => {
-    listIdBasket = []
-    for (let article of myBasket){
-        listIdBasket.push(article.id)
-    }
-}
+// ----- FIN INITIALISATION DU PANIER -----
 
-listIds()
-
-
-// ELEMENTS HTML
+// ----- ELEMENTS HTML -----
 const sectionArticle = document.querySelector("#cart__items");
 const articleHTML = document.getElementsByTagName("article")
 const buttonSubmit = document.getElementById("order")
@@ -80,7 +59,9 @@ const cityErrorMsg = document.getElementById("cityErrorMsg")
 const emailErrorMsg = document.getElementById("emailErrorMsg")
 
 const allForm = document.querySelectorAll(".cart__order__form__question")
+// ----- FIN ELEMENTS HTML -----
 
+// ----- VARIABLES -----
 let contactForm = {
     firstName : "",
     lastName : "",
@@ -89,7 +70,33 @@ let contactForm = {
     email : "",
 }
 
-// Fonction d'affichage du formulaire
+// ----- FIN VARIABLES -----
+
+// ----- FONCTIONS -----
+
+// ! Fonction pour modifier la quantité d'un article dans le basket
+const updateQuantity = (article, newQuantity) => {
+    for (let obj of myBasket){
+        if(obj.id == article.id && obj.color == article.color){
+            obj.quantity = newQuantity
+            saveCartInStorage(myBasket)
+            refreshNbArticle()
+        }
+    }
+}
+
+// ! Fonctions pour faire une liste des identifiants
+const listIds = () => {
+    listIdBasket = []
+    for (let article of myBasket){
+        listIdBasket.push(article.id)
+    }
+}
+
+listIds()
+
+
+// ! Fonction d'affichage du formulaire
 const displayForm = () => {
     if (localStorage.getItem("basket") == "[]"){
         document.querySelector("h1").innerText = "Votre panier est vide"
@@ -104,7 +111,7 @@ const displayForm = () => {
 
 displayForm()
 
-// Fonction de rafraichissement du prix total
+// ! Fonction de rafraichissement du prix total
 const refreshPrixTotal = () => {
     let priceTotal = 0;
     for (const priceArticle of articleHTML){
@@ -113,6 +120,9 @@ const refreshPrixTotal = () => {
     document.querySelector("#totalPrice").innerText = priceTotal;
 }
 
+// ----- FIN DES FONCTIONS -----
+
+// ----- AFFICHAGE DU PANIER -----
 
 // Création d'un nombre d'articles html égal au nombre d'élément dans le storage
 let nbArticles = myBasket.length
@@ -123,9 +133,10 @@ while (createIndex < nbArticles){
     sectionArticle.appendChild(cloneArticle)
 }
 
+// Requête API pour renseigner les articles
 window.setTimeout( () =>{
     // AFFICHAGE DES INFOS
-    let index = 0 // variable de l'élément html "article" en cours !
+    let index = 0 // variable de l'élément html <article> en cours
     for (const info of myBasket){
         
         fetch(`${URLCONST.URL_BASE}${URLCONST.ENDPOINT_GET}${info.id}`)
@@ -143,8 +154,11 @@ window.setTimeout( () =>{
     }},100
   
 )
+// ----- FIN AFFICHAGE DU PANIER -----
 
-// Gérer la suppression d'un élément
+// ----- GESTION DES EVENEMENTS -----
+
+// event : suppression d'un article
 const buttonsDelete = document.querySelectorAll(".deleteItem");
 buttonsDelete.forEach((btndelete) => {
     btndelete.addEventListener("click", ()=>{
@@ -161,12 +175,12 @@ buttonsDelete.forEach((btndelete) => {
 })
 
 
-// Gérer la modification de quantité d'un article
+// event : Modification de quantité d'un article
 const quantityItems = document.querySelectorAll(".itemQuantity");
 
 quantityItems.forEach((quantityItem) => {
     quantityItem.addEventListener("change", () => {
-
+        // validation de données
         if (!quantityItem.value || quantityItem.value == 0 || quantityItem.value < 0){
             quantityItem.value = 1
         }
@@ -176,14 +190,12 @@ quantityItems.forEach((quantityItem) => {
             alert("Attention quantité maximum de 100 !")
         }
 
-        else {
-            quantityItem.setAttribute("value", quantityItem.value)
-        }
+        else quantityItem.setAttribute("value", quantityItem.value)
         
+        // Selection du parent
         let parentQuantity = quantityItem.parentElement.parentElement.parentElement.parentElement;
-        let idChange = `${parentQuantity.getAttribute("data-id")} ${parentQuantity.getAttribute("data-color")}`
 
-        // MODIFICATION DANS LE NOUVEAU PANIER
+        // Mise à jour du panier et du storage
         let updateArticle = {
             id : parentQuantity.getAttribute("data-id"),
             color : parentQuantity.getAttribute("data-color"),
@@ -217,7 +229,6 @@ buttonSubmit.addEventListener("click", (button)=>{
 
     allForm.forEach((form) => {
         let inputForm = form.querySelector("input")
-        console.log(inputForm.getAttribute("name"));
 
         // validation du prenom
         if (inputForm.getAttribute("name") == "firstName"){
@@ -231,10 +242,10 @@ buttonSubmit.addEventListener("click", (button)=>{
                     
             }
 
-            else{
+            else {
                 validForm.push(true)
+                firstNameErrorMsg.innerText = ""
             }
-
         }
 
         // validation du nom
@@ -243,15 +254,16 @@ buttonSubmit.addEventListener("click", (button)=>{
             if (!contactForm.lastName || !contactForm.lastName.match(nameRegex)){
                 validForm.push(false)
 
-                if (!contactForm.lastName) lastNameErrorMsg.innerHTML = "Veuillez saisir votre nom svp";
+                if (!contactForm.lastName) lastNameErrorMsg.innerText = "Veuillez saisir votre nom svp";
                 
                 else lastNameErrorMsg.innerText = "Veuillez ne saisir que des lettres dans le champs nom svp "
                 
             }
 
-            else{
+            else {
                 validForm.push(true)
-            }
+                lastNameErrorMsg.innerText = ""
+            } 
 
         }
 
@@ -266,8 +278,9 @@ buttonSubmit.addEventListener("click", (button)=>{
 
             else{
                 validForm.push(true)
+                addressErrorMsg.innerText = ""
             }
-
+            
         }
 
         // validation de la ville
@@ -279,10 +292,11 @@ buttonSubmit.addEventListener("click", (button)=>{
                 cityErrorMsg.innerText = "Veuillez renseigner une ville";
             } 
 
-            else{
+            else {
                 validForm.push(true)
-            }
-
+                cityErrorMsg.innerText = ""
+            } 
+            
         }
 
         // Validation de l'email
@@ -293,14 +307,15 @@ buttonSubmit.addEventListener("click", (button)=>{
 
                 validForm.push(false)
 
-                if (!contactForm.email) emailErrorMsg.innerHTML = "Veuillez saisir un email svp";
+                if (!contactForm.email) emailErrorMsg.innerText = "Veuillez saisir un email svp";
                 
                 else emailErrorMsg.innerText = "Veuillez saisir un email valide svp"
                 
             }
 
-            else{
+            else {
                 validForm.push(true)
+                emailErrorMsg.innerText = ""
             }
 
         }
@@ -331,14 +346,12 @@ buttonSubmit.addEventListener("click", (button)=>{
 
     // Envoie des données au back-end
     else{
-        
         fetch(`${URLCONST.URL_BASE}${URLCONST.ENDPOINT_POST}`, requestOptions)
         .then(response => response.json())
         .then((result) => {
             location.assign(location.href.replace("cart.html", `confirmation.html?id=${result.orderId}`))
         })
         .catch(error => console.log('error', error));
-        
     }
 
 })
