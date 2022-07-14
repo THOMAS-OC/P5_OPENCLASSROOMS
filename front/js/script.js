@@ -1,7 +1,10 @@
-import * as URLCONST from "./constantes.js"
+// import * as URLCONST from "./constantes.js"
+const URL_BASE = "http://localhost:3000/";
+const ENDPOINT_GET = "api/products/";
+const ENDPOINT_POST = "api/products/order/";
 
 const sectionArticles = document.querySelector(".items"); // Selection du parent
-fetch(`${URLCONST.URL_BASE}${URLCONST.ENDPOINT_GET}`)
+fetch(`${URL_BASE}${ENDPOINT_GET}`)
     
     .then(res => res.json())
     .then(database => {

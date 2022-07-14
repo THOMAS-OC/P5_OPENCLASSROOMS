@@ -1,5 +1,8 @@
-import * as URLCONST from "./constantes.js"
+// import * as URLCONST from "./constantes.js"
 
+const URL_BASE = "http://localhost:3000/";
+const ENDPOINT_GET = "api/products/";
+const ENDPOINT_POST = "api/products/order/";
 // ----- INITIALISATION DU PANIER -----
 
 let myBasket = [] // Variable du panier
@@ -139,7 +142,7 @@ window.setTimeout( () =>{
     let index = 0 // variable de l'élément html <article> en cours
     for (const info of myBasket){
         
-        fetch(`${URLCONST.URL_BASE}${URLCONST.ENDPOINT_GET}${info.id}`)
+        fetch(`${URL_BASE}${ENDPOINT_GET}${info.id}`)
         .then(res => res.json())
         .then(data => {
             articleHTML[index].setAttribute("data-id", info.id)
@@ -337,7 +340,7 @@ buttonSubmit.addEventListener("click", (button)=>{
 
     // Envoie des données au back-end
     else{
-        fetch(`${URLCONST.URL_BASE}${URLCONST.ENDPOINT_POST}`, {
+        fetch(`${URL_BASE}${ENDPOINT_POST}`, {
             method: "POST",
             body : rawData,
             headers: {

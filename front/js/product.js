@@ -1,4 +1,9 @@
 import * as URLCONST from "./constantes.js"
+
+const URL_BASE = "http://localhost:3000/";
+const ENDPOINT_GET = "api/products/";
+const ENDPOINT_POST = "api/products/order/";
+
 let myBasket = [] // Variable du panier
 
 // ----- FUNCTIONS BASKET
@@ -60,7 +65,7 @@ const elementChoiceColors = document.getElementById("colors")
 const quantity = document.getElementById("quantity")
 const button = document.getElementById("addToCart")
 
-fetch(`${URLCONST.URL_BASE}${URLCONST.ENDPOINT_GET}${id}`)
+fetch(`${URL_BASE}${ENDPOINT_GET}${id}`)
 .then(res => {
 
     if (res.ok){
