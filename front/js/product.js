@@ -49,9 +49,6 @@ else {
     window.localStorage.setItem("basket", JSON.stringify(myBasket))
 }
 
-
-
-
 const url = new URL(location.href); // Récupérer l'url
 const id = url.searchParams.get("id"); // Récupérer la valeur de l'attribut id
 
@@ -63,43 +60,43 @@ const elementChoiceColors = document.getElementById("colors")
 const quantity = document.getElementById("quantity")
 const button = document.getElementById("addToCart")
 
-
 fetch(`${URLCONST.URL_BASE}${URLCONST.ENDPOINT_GET}${id}`)
-.then( rep => 
-    {
-        if (rep.ok === true)
-            rep.json()
-            .then(data => {
-                // informations
-                elementTitle.innerText = data.name
-                elementPrice.innerText = data.price
-                elementDescription.innerText = data.description
-                
-                // picture
-                let img = document.createElement("a"); // Création d'un élément HTML img
-                elementPicture.appendChild(img); // Ajout de l'élément crée dans le parent
-                img.outerHTML = `<img src="${data.imageUrl}" alt="${data.altTxt}">`
+.then(res => {
 
-                //title
-                document.title = data.name
+    if (res.ok){
 
-                // Add color choice
-                for (const color of data.colors){
-                    let newColor = document.createElement("option");
-                    newColor.value = color;
-                    newColor.innerText = color
-                    elementChoiceColors.appendChild(newColor)
-                }
-        });
-        else {
-            alert("Le produit est introuvable, nous vous redirigeons vers la page d'accueil");
-            let urlRedirect = location.href.slice(0, location.href.indexOf("html/") + 4)
-            urlRedirect = urlRedirect + "/index.html"
-            location.assign(urlRedirect);
+        res.json()
+        .then(data => {
+            // informations
+            elementTitle.innerText = data.name
+            elementPrice.innerText = data.price
+            elementDescription.innerText = data.description
+            
+            // picture
+            let img = document.createElement("a"); // Création d'un élément HTML img
+            elementPicture.appendChild(img); // Ajout de l'élément crée dans le parent
+            img.outerHTML = `<img src="${data.imageUrl}" alt="${data.altTxt}">`
 
-        }
+            //title
+            document.title = data.name
+
+            // Add color choice
+            for (const color of data.colors){
+                let newColor = document.createElement("option");
+                newColor.value = color;
+                newColor.innerText = color
+                elementChoiceColors.appendChild(newColor)
+            }
+        })
+        .catch(err => console.log(err))
     }
-);
+
+    else {
+        alert("Produit introuvable, nous allons vous rediriger vers la page d'accueil");
+        location.assign(location.href.replace("product.html", `index.html`))
+    }
+})
+.catch(err => console.log(err))
 
 button.addEventListener("click", () =>{
     // article du nouveau type de panier

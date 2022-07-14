@@ -347,6 +347,7 @@ buttonSubmit.addEventListener("click", (button)=>{
 
         .then(res => {
             console.log(res);
+
             if (res.ok){
                 res.json()
                 .then((result) => {
@@ -354,9 +355,11 @@ buttonSubmit.addEventListener("click", (button)=>{
                     location.assign(location.href.replace("cart.html", `confirmation.html?id=${result.orderId}`))
                 })
             }
+
             else {
                 alert("Erreur lors de l'envoi des données")
             }
+            
         })
 
         .catch(error => console.log('error', error));
