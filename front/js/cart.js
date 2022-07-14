@@ -221,9 +221,6 @@ buttonSubmit.addEventListener("click", (button)=>{
         contact[keys] = document.getElementById(keys).value.trim() // propriétés de l'objets et ID Html correspondant nommés identiquement
     }
 
-    contact.lastName = contact.lastName.toUpperCase()
-    contact.firstName = contact.firstName.toLowerCase()
-    
     let nameRegex = /^[A-Za-zéàè]+$/;
     let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -233,12 +230,14 @@ buttonSubmit.addEventListener("click", (button)=>{
         // validation du prenom
         if (inputForm.getAttribute("name") == "firstName"){
 
-            if (!contact.firstName || !contact.firstName.match(nameRegex)){
+            if (!contact.firstName || !contact.firstName.match(nameRegex) || contact.firstName.length < 3){
                 validForm.push(false)
 
-                if (!contact.firstName) firstNameErrorMsg.innerText = "Veuillez saisir votre prénom svp"
+                if (!contact.firstName || contact.firstName.length < 3) firstNameErrorMsg.innerText = "Veuillez saisir votre prénom svp"
                     
-                else firstNameErrorMsg.innerText = "Veuillez ne saisir que des lettres dans le champs prénom svp "
+                else if(!contact.firstName.match(nameRegex)) {
+                    firstNameErrorMsg.innerText = "Veuillez ne saisir que des lettres dans le champs prénom svp "
+                } 
                     
             }
 
@@ -322,37 +321,44 @@ buttonSubmit.addEventListener("click", (button)=>{
 
     })
 
-    // Paramétrage de la requete post
-    let myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
+    contact.lastName = contact.lastName.toUpperCase()
+    contact.firstName = contact.firstName.toLowerCase()
 
     let products = listIdBasket // Affectation des id produits dans la clef attendu par le back-end
-    // let products = ["055743915a544fde83cfdfc904935ee7"]
+
     let rawData = JSON.stringify({
         contact,
         products
     });
 
-    const requestOptions = {
-        method: 'POST',
-        headers: myHeaders,
-        body: rawData,
-        redirect: 'follow'
-    };
-
     // formulaire non valide
-
     if(validForm.includes(false)){
     }
 
     // Envoie des données au back-end
     else{
-        console.log("raw data " + rawData);
-        fetch(`${URLCONST.URL_BASE}${URLCONST.ENDPOINT_POST}`, requestOptions)
-        .then(response => response.json())
-        .then((result) => {
-            location.assign(location.href.replace("cart.html", `confirmation.html?id=${result.orderId}`))
+        fetch(`${URLCONST.URL_BASE}${URLCONST.ENDPOINT_POST}`, {
+            method: "POST",
+            body : rawData,
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            }
         })
+
+        .then(res => {
+            console.log(res);
+            if (res.ok){
+                res.json()
+                .then((result) => {
+                    console.log(result);
+                    location.assign(location.href.replace("cart.html", `confirmation.html?id=${result.orderId}`))
+                })
+            }
+            else {
+                alert("Erreur lors de l'envoi des données")
+            }
+        })
+
         .catch(error => console.log('error', error));
     }
 
