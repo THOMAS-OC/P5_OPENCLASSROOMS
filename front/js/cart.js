@@ -78,13 +78,20 @@ let contactForm = {
 
 // Fonction d'affichage du formulaire
 const displayForm = () => {
-    // Affichage du formulaire et du titre
-    orderForm.style.visibility = localStorage.length > 0 ? "visible":"hidden"
-    document.querySelector("h1").innerText = localStorage.length > 0 ? "Votre panier":"Votre panier est vide"
-    // Affichage du modèle d'article
-    if(localStorage.length == 0){
+
+    if (localStorage.getItem("basket") == "[]"){
+        document.querySelector("h1").innerText = "Votre panier est vide"
         document.querySelector("#cart__items").removeChild(document.querySelector(".cart__item"))
+        orderForm.style.visibility = "hidden"
+        
     }
+
+    else {
+        orderForm.style.visibility = "visible"
+    }
+
+    // Affichage du formulaire et du titre
+
 }
 
 displayForm()
@@ -161,7 +168,20 @@ const buttonsDelete = document.querySelectorAll(".deleteItem");
 buttonsDelete.forEach((btndelete) => {
     btndelete.addEventListener("click", ()=>{
         let parentButton = btndelete.parentElement.parentElement.parentElement.parentElement
+        // NOUVEAU PANIER
+        let articleRemove = {
+            id: parentButton.getAttribute("data-id"),
+            idUnique: `${parentButton.getAttribute("data-id")} ${parentButton.getAttribute("data-color")}`,
+            color: parentButton.getAttribute("data-color"),
+            quantity: 4
+        }
+
+        myBasket = myBasket.filter((item) => item.idUnique !== articleRemove.idUnique)
+        console.log(myBasket);
+        saveCartInStorage(myBasket)
+
         let idDelete = `${parentButton.getAttribute("data-id")} ${parentButton.getAttribute("data-color")}`
+        console.log(parentButton);
         localStorage.removeItem(idDelete)
         btndelete.parentElement.parentElement.parentElement.parentElement.remove();
         refreshNbArticles()

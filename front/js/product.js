@@ -32,7 +32,7 @@ const pushArticle = (article) => {
     }
 
     if (method == "push"){
-        alert("Nouvelle article")
+        alert("Nouvel article")
         myBasket.push(article)
         saveCartInStorage(myBasket)
     }
@@ -105,8 +105,9 @@ button.addEventListener("click", () =>{
     // article du nouveau type de panier
     let newArticle = {
         id : id,
+        idUnique : `${id} ${elementChoiceColors.value}` ,
         color : elementChoiceColors.value,
-        quantity : quantity.value
+        quantity : parseInt(quantity.value)
     }
 
 
