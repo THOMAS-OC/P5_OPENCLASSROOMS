@@ -32,7 +32,7 @@ const pushArticle = (article) => {
     }
 
     if (method == "push"){
-        alert("Nouvel article")
+        alert("Article ajouté au panier.")
         myBasket.push(article)
         saveCartInStorage(myBasket)
     }

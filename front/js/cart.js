@@ -15,14 +15,32 @@ const exportCartFromStorage = () => {
     return objectCart;
 }
 
-// !!------- Fonction pour modifier la quantité d'un article dans le basket
+// ! Fonction pour modifier la quantité d'un article dans le basket
 const updateQuantity = (article, newQuantity) => {
     for (let obj of myBasket){
         if(obj.id == article.id && obj.color == article.color){
             console.log("Modif des quantités");
             obj.quantity = newQuantity
             saveCartInStorage(myBasket)
+            refreshNbArticle()
         }
+    }
+}
+
+// ! Fonction de rafraichissement du nombre d'articles
+const refreshNbArticle = () => {
+    let numberArticle = 0
+    
+    for (let article of myBasket){
+        numberArticle += parseInt(article.quantity)
+    }
+
+    if (numberArticle > 1){
+        document.getElementById("totalQuantity").innerText = `${numberArticle} articles`
+    }
+
+    else {
+        document.getElementById("totalQuantity").innerText = `${numberArticle} article`
     }
 }
 
@@ -73,27 +91,18 @@ let contactForm = {
 
 // Fonction d'affichage du formulaire
 const displayForm = () => {
-
     if (localStorage.getItem("basket") == "[]"){
         document.querySelector("h1").innerText = "Votre panier est vide"
-        document.querySelector("#cart__items").removeChild(document.querySelector(".cart__item"))
         orderForm.style.visibility = "hidden"
-        
+        document.querySelector("#cart__items").removeChild(document.querySelector(".cart__item"))
     }
 
     else {
         orderForm.style.visibility = "visible"
     }
-
-    // Affichage du formulaire et du titre
-
 }
 
 displayForm()
-
-
-// Fonction de rafraichissement du nombre d'articles
-
 
 // Fonction de rafraichissement du prix total
 const refreshPrixTotal = () => {
@@ -135,18 +144,17 @@ window.setTimeout( () =>{
   
 )
 
-
-
 // Gérer la suppression d'un élément
 const buttonsDelete = document.querySelectorAll(".deleteItem");
 buttonsDelete.forEach((btndelete) => {
     btndelete.addEventListener("click", ()=>{
         let parentButton = btndelete.parentElement.parentElement.parentElement.parentElement
         let idUnique = `${parentButton.getAttribute("data-id")} ${parentButton.getAttribute("data-color")}`
-        console.log(myBasket);
         myBasket = myBasket.filter((item) => item.idUnique !== idUnique)
-        saveCartInStorage(myBasket)
         btndelete.parentElement.parentElement.parentElement.parentElement.remove();
+        saveCartInStorage(myBasket)
+        listIds()
+        refreshNbArticle()
         refreshPrixTotal()
         displayForm()
     })
