@@ -62,7 +62,7 @@ const allForm = document.querySelectorAll(".cart__order__form__question")
 // ----- FIN ELEMENTS HTML -----
 
 // ----- VARIABLES -----
-let contactForm = {
+let contact = {
     firstName : "",
     lastName : "",
     address : "",
@@ -216,13 +216,13 @@ buttonSubmit.addEventListener("click", (button)=>{
     button.preventDefault()
     let validForm = [];  
 
-    // pour chaque clefs de l'objet contactForm, on associe la valeur du champs correspondant dans le HTML
-    for (const keys of Object.keys(contactForm)){
-        contactForm[keys] = document.getElementById(keys).value.trim() // propriétés de l'objets et ID Html correspondant nommés identiquement
+    // pour chaque clefs de l'objet contact, on associe la valeur du champs correspondant dans le HTML
+    for (const keys of Object.keys(contact)){
+        contact[keys] = document.getElementById(keys).value.trim() // propriétés de l'objets et ID Html correspondant nommés identiquement
     }
 
-    contactForm.lastName = contactForm.lastName.toUpperCase()
-    contactForm.firstName = contactForm.firstName.toLowerCase()
+    contact.lastName = contact.lastName.toUpperCase()
+    contact.firstName = contact.firstName.toLowerCase()
     
     let nameRegex = /^[A-Za-zéàè]+$/;
     let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -233,10 +233,10 @@ buttonSubmit.addEventListener("click", (button)=>{
         // validation du prenom
         if (inputForm.getAttribute("name") == "firstName"){
 
-            if (!contactForm.firstName || !contactForm.firstName.match(nameRegex)){
+            if (!contact.firstName || !contact.firstName.match(nameRegex)){
                 validForm.push(false)
 
-                if (!contactForm.firstName) firstNameErrorMsg.innerText = "Veuillez saisir votre prénom svp"
+                if (!contact.firstName) firstNameErrorMsg.innerText = "Veuillez saisir votre prénom svp"
                     
                 else firstNameErrorMsg.innerText = "Veuillez ne saisir que des lettres dans le champs prénom svp "
                     
@@ -251,10 +251,10 @@ buttonSubmit.addEventListener("click", (button)=>{
         // validation du nom
         else if (inputForm.getAttribute("name") == "lastName"){
 
-            if (!contactForm.lastName || !contactForm.lastName.match(nameRegex)){
+            if (!contact.lastName || !contact.lastName.match(nameRegex)){
                 validForm.push(false)
 
-                if (!contactForm.lastName) lastNameErrorMsg.innerText = "Veuillez saisir votre nom svp";
+                if (!contact.lastName) lastNameErrorMsg.innerText = "Veuillez saisir votre nom svp";
                 
                 else lastNameErrorMsg.innerText = "Veuillez ne saisir que des lettres dans le champs nom svp "
                 
@@ -271,7 +271,7 @@ buttonSubmit.addEventListener("click", (button)=>{
 
         else if (inputForm.getAttribute("name") == "address"){
 
-            if (!contactForm.address){
+            if (!contact.address){
                 validForm.push(false)
                 addressErrorMsg.innerText = "Veuillez renseigner votre adresse";
             } 
@@ -287,7 +287,7 @@ buttonSubmit.addEventListener("click", (button)=>{
 
         else if (inputForm.getAttribute("name") == "city"){
         
-            if (!contactForm.city) {
+            if (!contact.city) {
                 validForm.push(false)
                 cityErrorMsg.innerText = "Veuillez renseigner une ville";
             } 
@@ -303,11 +303,11 @@ buttonSubmit.addEventListener("click", (button)=>{
 
         else if (inputForm.getAttribute("name") == "email"){
 
-            if (!contactForm.email || !contactForm.email.match(emailRegex)){
+            if (!contact.email || !contact.email.match(emailRegex)){
 
                 validForm.push(false)
 
-                if (!contactForm.email) emailErrorMsg.innerText = "Veuillez saisir un email svp";
+                if (!contact.email) emailErrorMsg.innerText = "Veuillez saisir un email svp";
                 
                 else emailErrorMsg.innerText = "Veuillez saisir un email valide svp"
                 
@@ -327,8 +327,9 @@ buttonSubmit.addEventListener("click", (button)=>{
     myHeaders.append("Content-Type", "application/json");
 
     let products = listIdBasket // Affectation des id produits dans la clef attendu par le back-end
+    // let products = ["055743915a544fde83cfdfc904935ee7"]
     let rawData = JSON.stringify({
-        contactForm,
+        contact,
         products
     });
 
@@ -346,6 +347,7 @@ buttonSubmit.addEventListener("click", (button)=>{
 
     // Envoie des données au back-end
     else{
+        console.log("raw data " + rawData);
         fetch(`${URLCONST.URL_BASE}${URLCONST.ENDPOINT_POST}`, requestOptions)
         .then(response => response.json())
         .then((result) => {
