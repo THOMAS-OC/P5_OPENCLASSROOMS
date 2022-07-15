@@ -102,7 +102,10 @@ const displayForm = () => {
     if (localStorage.getItem("basket") == "[]"){
         document.querySelector("h1").innerText = "Votre panier est vide"
         orderForm.style.visibility = "hidden"
-        document.querySelector("#cart__items").removeChild(document.querySelector(".cart__item"))
+
+        if (document.querySelector(".cart__item")) {
+            document.querySelector("#cart__items").removeChild(document.querySelector(".cart__item"))
+        }
     }
 
     else {

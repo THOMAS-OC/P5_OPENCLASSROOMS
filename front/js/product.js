@@ -100,6 +100,7 @@ fetch(`${URL_BASE}${ENDPOINT_GET}${id}`)
     else {
         alert("Désolé, produit introuvable, nous allons vous rediriger vers la page d'accueil");
         let newUrl = location.href
+        // Suppression des variables d'url puis remplacement de la page produit vers la page index
         newUrl = newUrl.slice(0, newUrl.indexOf("?")).replace("product.html", `index.html`)
         location.assign(newUrl)
     }
@@ -117,7 +118,6 @@ button.addEventListener("click", () =>{
         color : elementChoiceColors.value,
         quantity : parseInt(quantity.value)
     }
-
 
    // VERIFICATION DES CHAMPS DE FORMULAIRE
     if (!elementChoiceColors.value) alert("Veuillez sélectionner une couleur")
