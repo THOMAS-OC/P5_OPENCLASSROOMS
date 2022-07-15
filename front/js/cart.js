@@ -16,19 +16,13 @@ const refreshNbArticle = () => {
         numberArticle += parseInt(article.quantity)
     }
 
-    if (numberArticle > 1){
-        document.getElementById("totalQuantity").innerText = `${numberArticle} articles`
-    }
-
-    else {
-        document.getElementById("totalQuantity").innerText = `${numberArticle} article`
-    }
+    if (numberArticle > 1) document.getElementById("totalQuantity").innerText = `${numberArticle} articles`
+    
+    else document.getElementById("totalQuantity").innerText = `${numberArticle} article`
 }
 
 // ! Fonction pour exporter le panier JS dans le storage
-const saveCartInStorage = (obj) => {
-    window.localStorage.setItem("basket", JSON.stringify(obj))
-}
+const saveCartInStorage = obj => window.localStorage.setItem("basket", JSON.stringify(obj))
 
 // ! Fonction pour importer le panier du storage vers un objet JavaScript
 const exportCartFromStorage = () => {
@@ -52,15 +46,14 @@ else {
 // ----- ELEMENTS HTML -----
 const sectionArticle = document.querySelector("#cart__items");
 const articleHTML = document.getElementsByTagName("article")
+
 const buttonSubmit = document.getElementById("order")
 const orderForm = document.querySelector(".cart__order")
-
 const firstNameErrorMsg = document.getElementById("firstNameErrorMsg")
 const lastNameErrorMsg = document.getElementById("lastNameErrorMsg")
 const addressErrorMsg = document.getElementById("addressErrorMsg")
 const cityErrorMsg = document.getElementById("cityErrorMsg")
 const emailErrorMsg = document.getElementById("emailErrorMsg")
-
 const allForm = document.querySelectorAll(".cart__order__form__question")
 // ----- FIN ELEMENTS HTML -----
 
@@ -91,7 +84,6 @@ const updateQuantity = (article, newQuantity) => {
 // ! Fonction pour supprimer un article, paramètre 1 : objet panier, paramètre 2 : objet de l'article avec une clef idUnique
 const deleteArticle = (basket, itemDelete) => {
     return basket.filter((item) => item.idUnique !== itemDelete.idUnique)
-    
 }
 
 // ! Fonctions pour faire une liste des identifiants

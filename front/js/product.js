@@ -1,18 +1,15 @@
 // import * as URLCONST from "./constantes.js"
+
 // ----- VARIABLES -----
 const URL_BASE = "http://localhost:3000/";
 const ENDPOINT_GET = "api/products/";
-const ENDPOINT_POST = "api/products/order/";
 let myBasket = [] // Variable du panier
 // ----- FIN VARIABLES -----
 
 
 // ----- FONCTIONS DU PANIER -----
-
 // ! Fonction pour exporter le panier JS dans le storage
-const saveCartInStorage = (obj) => {
-    window.localStorage.setItem("basket", JSON.stringify(obj))
-}
+const saveCartInStorage = obj => window.localStorage.setItem("basket", JSON.stringify(obj))
 
 // ! Fonction pour importer le panier du storage vers un objet JavaScript
 const exportCartFromStorage = () => {
@@ -22,21 +19,21 @@ const exportCartFromStorage = () => {
 }
 
 /* ! Fonction pour ajouter un article au panier? si l'article est déjà présent : Incrémentation de la quantité */
-const saveArticle = (article) => {
-    let push = true
+const saveArticle = article => {
+    let save = true
 
     for (let obj of myBasket){
 
         if(obj.id == article.id && obj.color == article.color){
             alert("Modification des quantités")
             obj.quantity = parseInt(obj.quantity) + parseInt(article.quantity)
-            push = false
+            save = false
             saveCartInStorage(myBasket)
         }
         
     }
 
-    if (push){
+    if (save){
         alert("Article ajouté au panier.")
         myBasket.push(article)
         saveCartInStorage(myBasket)
@@ -51,8 +48,7 @@ if (window.localStorage.getItem("basket")) myBasket = exportCartFromStorage()
 
 // Création d'un panier
 else window.localStorage.setItem("basket", JSON.stringify(myBasket))
-
-// ----- INITIALISATION DU PANIER -----
+// ----- FIN INITIALISATION DU PANIER -----
 
 
 // ----- ELEMENTS HTML -----
@@ -66,7 +62,8 @@ const elementPrice = document.getElementById("price")
 const elementChoiceColors = document.getElementById("colors")
 const quantity = document.getElementById("quantity")
 const button = document.getElementById("addToCart")
-// ----- FIN DES VARIABLES -----
+// ----- FIN DES ELEMENTS HTML -----
+
 
 // ----- REQUETE API -----
 fetch(`${URL_BASE}${ENDPOINT_GET}${id}`)
@@ -101,15 +98,17 @@ fetch(`${URL_BASE}${ENDPOINT_GET}${id}`)
     }
 
     else {
-        alert("Produit introuvable, nous allons vous rediriger vers la page d'accueil");
-        location.assign(location.href.replace("product.html", `index.html`))
+        alert("Désolé, produit introuvable, nous allons vous rediriger vers la page d'accueil");
+        let newUrl = location.href
+        newUrl = newUrl.slice(0, newUrl.indexOf("?")).replace("product.html", `index.html`)
+        location.assign(newUrl)
     }
 })
 .catch(err => console.log(err))
 // ----- FIN REQUETE API -----
 
-// ----- AJOUT DU PRODUIT AU PANIER -----
 
+// ----- AJOUT DU PRODUIT AU PANIER -----
 button.addEventListener("click", () =>{
     // article du nouveau type de panier
     let newArticle = {
@@ -121,21 +120,13 @@ button.addEventListener("click", () =>{
 
 
    // VERIFICATION DES CHAMPS DE FORMULAIRE
-    if (!elementChoiceColors.value) {
-        alert("Veuillez sélectionner une couleur")
-    }
+    if (!elementChoiceColors.value) alert("Veuillez sélectionner une couleur")
 
-    else if (!parseInt(quantity.value)){
-        alert("Veuillez saisir un nombre dans le champs 'nombre d'articles' svp");
-    }
-
-    else if (quantity.value < 1 || quantity.value > 100){
-        alert("Veuillez saisir un nombre entre 1 et 100 dans le champs 'nombre d'articles' svp");
-    }
-
-    else {
-        saveArticle(newArticle)
-    }
+    else if (!parseInt(quantity.value)) alert("Veuillez saisir un nombre dans le champs 'nombre d'articles' svp");
+    
+    else if (quantity.value < 1 || quantity.value > 100) alert("Veuillez saisir un nombre entre 1 et 100 dans le champs 'nombre d'articles' svp");
+    
+    else saveArticle(newArticle)
  
 })
 // ----- FIN AJOUT DU PRODUIT AU PANIER -----
