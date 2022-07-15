@@ -1,9 +1,15 @@
 // import * as URLCONST from "./constantes.js"
+
+// ----- CONSTANTES -----
 const URL_BASE = "http://localhost:3000/";
 const ENDPOINT_GET = "api/products/";
 const ENDPOINT_POST = "api/products/order/";
+// ----- FIN CONSTANTES -----
 
+// ----- ELEMENT HTML -----
 const sectionArticles = document.querySelector(".items"); // Selection du parent
+
+// ----- REQUETE API -----
 fetch(`${URL_BASE}${ENDPOINT_GET}`)
     
     .then(res => res.json())
@@ -24,3 +30,4 @@ fetch(`${URL_BASE}${ENDPOINT_GET}`)
         
     })
     .catch(err => alert("Veuillez nous excuser pour la gêne ocassionée, le serveur est actuellement en maintenance"));
+// ----- FIN DE LA REQUETE API -----

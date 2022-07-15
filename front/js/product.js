@@ -1,12 +1,13 @@
 // import * as URLCONST from "./constantes.js"
-
+// ----- VARIABLES -----
 const URL_BASE = "http://localhost:3000/";
 const ENDPOINT_GET = "api/products/";
 const ENDPOINT_POST = "api/products/order/";
-
 let myBasket = [] // Variable du panier
+// ----- FIN VARIABLES -----
 
-// ----- FUNCTIONS BASKET
+
+// ----- FONCTIONS DU PANIER -----
 
 // ! Fonction pour exporter le panier JS dans le storage
 const saveCartInStorage = (obj) => {
@@ -43,16 +44,18 @@ const saveArticle = (article) => {
 
 }
 
+// ----- INITIALISATION DU PANIER -----
 
-// Si panier existant
-if (window.localStorage.getItem("basket")){
-    myBasket = exportCartFromStorage()
-}
+// Récupération du panier existant
+if (window.localStorage.getItem("basket")) myBasket = exportCartFromStorage()
 
-else {
-    window.localStorage.setItem("basket", JSON.stringify(myBasket))
-}
+// Création d'un panier
+else window.localStorage.setItem("basket", JSON.stringify(myBasket))
 
+// ----- INITIALISATION DU PANIER -----
+
+
+// ----- ELEMENTS HTML -----
 const url = new URL(location.href); // Récupérer l'url
 const id = url.searchParams.get("id"); // Récupérer la valeur de l'attribut id
 
@@ -63,7 +66,9 @@ const elementPrice = document.getElementById("price")
 const elementChoiceColors = document.getElementById("colors")
 const quantity = document.getElementById("quantity")
 const button = document.getElementById("addToCart")
+// ----- FIN DES VARIABLES -----
 
+// ----- REQUETE API -----
 fetch(`${URL_BASE}${ENDPOINT_GET}${id}`)
 .then(res => {
 
@@ -101,6 +106,9 @@ fetch(`${URL_BASE}${ENDPOINT_GET}${id}`)
     }
 })
 .catch(err => console.log(err))
+// ----- FIN REQUETE API -----
+
+// ----- AJOUT DU PRODUIT AU PANIER -----
 
 button.addEventListener("click", () =>{
     // article du nouveau type de panier
@@ -130,3 +138,4 @@ button.addEventListener("click", () =>{
     }
  
 })
+// ----- FIN AJOUT DU PRODUIT AU PANIER -----

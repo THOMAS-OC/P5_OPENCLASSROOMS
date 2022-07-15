@@ -91,6 +91,7 @@ const updateQuantity = (article, newQuantity) => {
 // ! Fonction pour supprimer un article, paramètre 1 : objet panier, paramètre 2 : objet de l'article avec une clef idUnique
 const deleteArticle = (basket, itemDelete) => {
     return basket.filter((item) => item.idUnique !== itemDelete.idUnique)
+    
 }
 
 // ! Fonctions pour faire une liste des identifiants
@@ -132,7 +133,7 @@ const refreshPrixTotal = () => {
 
 // ----- AFFICHAGE DU PANIER -----
 
-// Création d'un nombre d'articles html égal au nombre d'élément dans le storage
+// Création d'un nombre d'articles html égal au nombre d'élément dans le panier
 let nbArticles = myBasket.length
 let createIndex = 1
 while (createIndex < nbArticles){
@@ -279,7 +280,6 @@ buttonSubmit.addEventListener("click", (button)=>{
         }
 
         // validation de l'adresse
-
         else if (inputForm.getAttribute("name") == "address"){
 
             if (!contact.address){
@@ -295,7 +295,6 @@ buttonSubmit.addEventListener("click", (button)=>{
         }
 
         // validation de la ville
-
         else if (inputForm.getAttribute("name") == "city"){
         
             if (!contact.city) {
@@ -311,7 +310,6 @@ buttonSubmit.addEventListener("click", (button)=>{
         }
 
         // Validation de l'email
-
         else if (inputForm.getAttribute("name") == "email"){
 
             if (!contact.email || !contact.email.match(emailRegex)){
