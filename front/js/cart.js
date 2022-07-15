@@ -88,15 +88,20 @@ const updateQuantity = (article, newQuantity) => {
     }
 }
 
+// ! Fonction pour supprimer un article, paramètre 1 : objet panier, paramètre 2 : objet de l'article avec une clef idUnique
+const deleteArticle = (basket, itemDelete) => {
+    return basket.filter((item) => item.idUnique !== itemDelete.idUnique)
+}
+
 // ! Fonctions pour faire une liste des identifiants
-const listIds = () => {
+const saveListIds = () => {
     listIdBasket = []
     for (let article of myBasket){
         listIdBasket.push(article.id)
     }
 }
 
-listIds()
+saveListIds()
 
 
 // ! Fonction d'affichage du formulaire
@@ -166,11 +171,15 @@ const buttonsDelete = document.querySelectorAll(".deleteItem");
 buttonsDelete.forEach((btndelete) => {
     btndelete.addEventListener("click", ()=>{
         let parentButton = btndelete.parentElement.parentElement.parentElement.parentElement
-        let idUnique = `${parentButton.getAttribute("data-id")} ${parentButton.getAttribute("data-color")}`
-        myBasket = myBasket.filter((item) => item.idUnique !== idUnique)
+
+        let itemDelete = {
+            idUnique : `${parentButton.getAttribute("data-id")} ${parentButton.getAttribute("data-color")}`
+        }
+
+        myBasket = deleteArticle(myBasket, itemDelete)
         btndelete.parentElement.parentElement.parentElement.parentElement.remove();
         saveCartInStorage(myBasket)
-        listIds()
+        saveListIds()
         refreshNbArticle()
         refreshPrixTotal()
         displayForm()
