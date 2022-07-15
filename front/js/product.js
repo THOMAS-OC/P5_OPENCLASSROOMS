@@ -1,4 +1,4 @@
-import * as URLCONST from "./constantes.js"
+// import * as URLCONST from "./constantes.js"
 
 const URL_BASE = "http://localhost:3000/";
 const ENDPOINT_GET = "api/products/";
@@ -15,28 +15,27 @@ const saveCartInStorage = (obj) => {
 
 // ! Fonction pour importer le panier du storage vers un objet JavaScript
 const exportCartFromStorage = () => {
-    let rawCart = window.localStorage.getItem("basket")
-    let objectCart = JSON.parse(rawCart)
-    return objectCart;
+    let rawData = window.localStorage.getItem("basket")
+    let objectData = JSON.parse(rawData)
+    return objectData;
 }
 
-/* ! Fonction pour ajouter un article au panier si l'article est déjà présent, incrémentation de la quantité */
-
-const pushArticle = (article) => {
-    let method = "push"
+/* ! Fonction pour ajouter un article au panier? si l'article est déjà présent : Incrémentation de la quantité */
+const saveArticle = (article) => {
+    let push = true
 
     for (let obj of myBasket){
 
         if(obj.id == article.id && obj.color == article.color){
             alert("Modification des quantités")
             obj.quantity = parseInt(obj.quantity) + parseInt(article.quantity)
-            method = "notPush"
+            push = false
             saveCartInStorage(myBasket)
         }
         
     }
 
-    if (method == "push"){
+    if (push){
         alert("Article ajouté au panier.")
         myBasket.push(article)
         saveCartInStorage(myBasket)
@@ -127,7 +126,7 @@ button.addEventListener("click", () =>{
     }
 
     else {
-        pushArticle(newArticle)
+        saveArticle(newArticle)
     }
  
 })

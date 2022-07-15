@@ -154,7 +154,7 @@ window.setTimeout( () =>{
             index ++
             refreshPrixTotal()
         }); 
-    }},100
+    }},50
   
 )
 // ----- FIN AFFICHAGE DU PANIER -----
@@ -328,7 +328,6 @@ buttonSubmit.addEventListener("click", (button)=>{
     contact.firstName = contact.firstName.toLowerCase()
 
     let products = listIdBasket // Affectation des id produits dans la clef attendu par le back-end
-
     let rawData = JSON.stringify({
         contact,
         products
@@ -337,7 +336,7 @@ buttonSubmit.addEventListener("click", (button)=>{
     // formulaire non valide
     if(validForm.includes(false)){
     }
-
+    
     // Envoie des données au back-end
     else{
         fetch(`${URL_BASE}${ENDPOINT_POST}`, {
