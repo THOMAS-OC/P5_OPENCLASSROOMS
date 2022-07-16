@@ -25,7 +25,7 @@ const saveArticle = article => {
     for (let obj of myBasket){
 
         if(obj.id == article.id && obj.color == article.color){
-            alert("Modification des quantités")
+            alert("Quantité modifiée")
             obj.quantity = parseInt(obj.quantity) + parseInt(article.quantity)
             save = false
             saveCartInStorage(myBasket)
@@ -77,7 +77,7 @@ fetch(`${URL_BASE}${ENDPOINT_GET}${id}`)
             elementTitle.innerText = data.name
             elementPrice.innerText = data.price
             elementDescription.innerText = data.description
-            
+            quantity.value = 1
             // picture
             let img = document.createElement("a"); // Création d'un élément HTML img
             elementPicture.appendChild(img); // Ajout de l'élément crée dans le parent
@@ -98,7 +98,7 @@ fetch(`${URL_BASE}${ENDPOINT_GET}${id}`)
     }
 
     else {
-        alert("Désolé, produit introuvable, nous allons vous rediriger vers la page d'accueil");
+        alert("Désolé, le produit que vous recherchez est introuvables ou n'est plus disponible. Nous allons vous rediriger vers la page d'accueil de Kanap.");
         let newUrl = location.href
         // Suppression des variables d'url puis remplacement de la page produit vers la page index
         newUrl = newUrl.slice(0, newUrl.indexOf("?")).replace("product.html", `index.html`)

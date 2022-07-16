@@ -3,7 +3,6 @@
 // ----- CONSTANTES -----
 const URL_BASE = "http://localhost:3000/";
 const ENDPOINT_GET = "api/products/";
-const ENDPOINT_POST = "api/products/order/";
 // ----- FIN CONSTANTES -----
 
 // ----- ELEMENT HTML -----

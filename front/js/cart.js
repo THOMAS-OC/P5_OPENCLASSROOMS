@@ -6,15 +6,13 @@ const ENDPOINT_POST = "api/products/order/";
 // ----- INITIALISATION DU PANIER -----
 
 let myBasket = [] // Variable du panier
-let listIdBasket = [] // liste des ientifiants produits
+let listIdBasket = [] // liste des identifiants produits
 
 // ! Fonction de rafraichissement du nombre d'articles
 const refreshNbArticle = () => {
     let numberArticle = 0
 
-    for (let article of myBasket){
-        numberArticle += parseInt(article.quantity)
-    }
+    for (let article of myBasket) numberArticle += parseInt(article.quantity)
 
     if (numberArticle > 1) document.getElementById("totalQuantity").innerText = `${numberArticle} articles`
     
@@ -86,7 +84,7 @@ const deleteArticle = (basket, itemDelete) => {
     return basket.filter((item) => item.idUnique !== itemDelete.idUnique)
 }
 
-// ! Fonctions pour faire une liste des identifiants
+// ! Fonctions pour enregistrer la liste des identifiants produits
 const saveListIds = () => {
     listIdBasket = []
     for (let article of myBasket){
@@ -217,10 +215,8 @@ quantityItems.forEach((quantityItem) => {
 })
 
 
-// VALIDATION FORM
-
-
-buttonSubmit.addEventListener("click", (button)=>{
+// VALIDATION FORMULAIRE
+buttonSubmit.addEventListener("click", button=>{
     button.preventDefault()
     let validForm = [];  
 
@@ -336,11 +332,7 @@ buttonSubmit.addEventListener("click", (button)=>{
     });
 
     // formulaire non valide
-    if(validForm.includes(false)){
-    }
-    
-    // Envoie des données au back-end
-    else{
+    if(!validForm.includes(false)){
         fetch(`${URL_BASE}${ENDPOINT_POST}`, {
             method: "POST",
             body : rawData,
@@ -368,5 +360,8 @@ buttonSubmit.addEventListener("click", (button)=>{
 
         .catch(error => console.log('error', error));
     }
+    
+    // Formulaire invalide
+    else{}
 
 })
